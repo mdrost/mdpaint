@@ -4,6 +4,9 @@
 #include <QLocale>
 #include <QTranslator>
 
+
+#include <vips/vips.h>
+
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
@@ -19,12 +22,14 @@ int main(int argc, char* argv[])
     }
 
     //InitializeMagick(NULL);
+    VIPS_INIT(argv[0]);
 
     mdpMainWindow mainWindow;
     mainWindow.setObjectName(QStringLiteral("mainWindow"));
     mainWindow.show();
     int result = app.exec();
 
+    vips_shutdown();
     //DestroyMagick();
 
     return result;

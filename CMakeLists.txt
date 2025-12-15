@@ -22,6 +22,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 add_subdirectory(interface/mdpaint)
 add_subdirectory(private/mdpaint/private)
 add_subdirectory(backends/cairo)
+add_subdirectory(backends/vips)
 
 set(TS_FILES mdpaint_pl_PL.ts)
 
@@ -84,12 +85,17 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+find_package(Vips REQUIRED)
+find_package(GLIB2 REQUIRED)
 target_compile_definitions(mdpaint PRIVATE QT_NO_KEYWORDS)
 target_link_libraries(mdpaint
     PUBLIC
     PRIVATE
         mdpaint::interface
         mdpaint::cairo
+        mdpaint::vips
+        Vips::Vips
+        GLIB2::GLIB2
         Qt${QT_VERSION_MAJOR}::Widgets
 )
 
