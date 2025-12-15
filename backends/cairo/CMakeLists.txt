@@ -2,6 +2,7 @@ find_package(Cairo)
 find_package(Boost REQUIRED)
 
 set(SOURCES
+    include/mdpaint/cairo/api.h
     include/mdpaint/cairo/cairobackendplugin.h
     cairobackendplugin.cpp
     cairoellipsetool.h
@@ -24,6 +25,12 @@ set(SOURCES
 
 add_library(mdpaint_cairo SHARED
     ${SOURCES}
+)
+
+target_compile_definitions(mdpaint_cairo
+    PUBLIC
+    PRIVATE
+        MDP_CAIRO_EXPORTS
 )
 
 target_include_directories(mdpaint_cairo

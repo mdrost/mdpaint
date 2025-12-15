@@ -1,9 +1,11 @@
 #ifndef MDP_CAIROBACKENDPLUGIN_H
 #define MDP_CAIROBACKENDPLUGIN_H
 
+#include "api.h"
+
 #include <mdpaint/backendplugin.h>
 
-class mdpCairoBackendPlugin : public mdpBackendPlugin
+class MDP_CAIRO_API mdpCairoBackendPlugin : public mdpBackendPlugin
 {
 public:
 

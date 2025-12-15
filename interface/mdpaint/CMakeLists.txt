@@ -1,4 +1,5 @@
 set(SOURCES
+    api.h
     backendplugin.h
     backendplugin.cpp
     history.h
@@ -17,6 +18,12 @@ set(SOURCES
 
 add_library(mdpaint_interface SHARED
     ${SOURCES}
+)
+
+target_compile_definitions(mdpaint_interface
+    PUBLIC
+    PRIVATE
+        MDP_INTERFACE_EXPORTS
 )
 
 target_include_directories(mdpaint_interface

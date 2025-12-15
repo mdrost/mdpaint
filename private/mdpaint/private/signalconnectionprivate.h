@@ -1,7 +1,9 @@
 #ifndef MDP_SIGNALCONNECTIONPRIVATE_H
 #define MDP_SIGNALCONNECTIONPRIVATE_H
 
-class mdpSignalConnectionPrivate
+#include "api.h"
+
+class MDP_PRIVATE_API mdpSignalConnectionPrivate
 {
 public:
 

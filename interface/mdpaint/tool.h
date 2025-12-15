@@ -1,7 +1,9 @@
 #ifndef MDP_TOOL_H
 #define MDP_TOOL_H
 
-class mdpTool
+#include "api.h"
+
+class MDP_INTERFACE_API mdpTool
 {
 public:
 

@@ -1,0 +1,23 @@
+#ifndef MDP_INTERFACE_API_H
+#define MDP_INTERFACE_API_H
+
+// XXX: Keep this file in sync with <mdpaint/private/api.h>.
+
+#if defined(_WIN32)
+# define MDP_INTERFACE_API_EXPORT __declspec(dllexport)
+# define MDP_INTERFACE_API_IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+# define MDP_INTERFACE_API_EXPORT __attribute__((__visibility__("default")))
+# define MDP_INTERFACE_API_IMPORT
+#else
+# define MDP_INTERFACE_API_EXPORT
+# define MDP_INTERFACE_API_IMPORT
+#endif
+
+#ifdef MDP_INTERFACE_EXPORTS
+# define MDP_INTERFACE_API MDP_INTERFACE_API_EXPORT
+#else
+# define MDP_INTERFACE_API MDP_INTERFACE_API_IMPORT
+#endif
+
+#endif // MDP_INTERFACE_API_H

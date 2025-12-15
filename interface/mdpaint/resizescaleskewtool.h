@@ -1,9 +1,10 @@
 #ifndef MDP_RESIZESCALESKEWTOOL_H
 #define MDP_RESIZESCALESKEWTOOL_H
 
+#include "api.h"
 #include "tool.h"
 
-struct mdpResizeScaleSkewData
+struct MDP_INTERFACE_API mdpResizeScaleSkewData
 {
     int x;
     int y;
@@ -14,7 +15,7 @@ struct mdpResizeScaleSkewData
     double skewY;
 };
 
-class mdpResizeScaleSkewTool : public mdpTool
+class MDP_INTERFACE_API mdpResizeScaleSkewTool : public mdpTool
 {
 public:
 

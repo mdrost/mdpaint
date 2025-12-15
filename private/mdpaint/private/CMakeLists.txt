@@ -1,6 +1,7 @@
 find_package(Boost REQUIRED)
 
 set(SOURCES
+    api.h
     boostsignals2signalconnectionprivate.h
     boostsignals2signalconnectionprivate.cpp
     signalconnectionprivate.h
@@ -9,6 +10,12 @@ set(SOURCES
 
 add_library(mdpaint_private STATIC
     ${SOURCES}
+)
+
+target_compile_definitions(mdpaint_interface
+    PUBLIC
+    PRIVATE
+        MDP_PRIVATE_EXPORTS
 )
 
 target_compile_definitions(mdpaint_private

@@ -1,11 +1,13 @@
 #ifndef MDP_IMAGEMODEL_H
 #define MDP_IMAGEMODEL_H
 
+#include "api.h"
+
 #include <mdpaint/signalconnection.h>
 
 #include <functional>
 
-class mdpImageModel
+class MDP_INTERFACE_API mdpImageModel
 {
 public:
 

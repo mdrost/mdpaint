@@ -1,11 +1,12 @@
 #ifndef MDP_BOOSTSIGNALS2SIGNALCONNECTION_H
 #define MDP_BOOSTSIGNALS2SIGNALCONNECTION_H
 
+#include "api.h"
 #include "signalconnectionprivate.h"
 
 #include <boost/signals2/connection.hpp>
 
-class mdpBoostSignals2SignalConnectionPrivate : public mdpSignalConnectionPrivate
+class MDP_PRIVATE_API mdpBoostSignals2SignalConnectionPrivate : public mdpSignalConnectionPrivate
 {
 public:
 

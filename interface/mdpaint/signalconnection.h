@@ -1,11 +1,13 @@
 #ifndef MDP_SIGNALCONNECTION_H
 #define MDP_SIGNALCONNECTION_H
 
+#include "api.h"
+
 #include <memory>
 
 class mdpSignalConnectionPrivate;
 
-class [[nodiscard]] mdpSignalConnection final
+class MDP_INTERFACE_API [[nodiscard]] mdpSignalConnection final
 {
 public:
 

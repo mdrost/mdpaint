@@ -1,6 +1,7 @@
 #ifndef MDP_BACKENDPLUGIN_H
 #define MDP_BACKENDPLUGIN_H
 
+#include "api.h"
 #include "history.h"
 #include "imagemodel.h"
 #include "resizescaleskewtool.h"
@@ -8,7 +9,7 @@
 
 #include <memory>
 
-class mdpBackendPlugin
+class MDP_INTERFACE_API mdpBackendPlugin
 {
 public:
 

@@ -1,7 +1,9 @@
 #ifndef MDP_HISTORYENTRY_H
 #define MDP_HISTORYENTRY_H
 
-class mdpHistoryEntry
+#include "api.h"
+
+class MDP_INTERFACE_API mdpHistoryEntry
 {
 public:
 
