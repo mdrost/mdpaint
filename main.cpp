@@ -5,7 +5,7 @@
 #include <QTranslator>
 
 
-#include <vips/vips.h>
+//#include <vips/vips.h>
 
 int main(int argc, char* argv[])
 {
@@ -22,14 +22,14 @@ int main(int argc, char* argv[])
     }
 
     //InitializeMagick(NULL);
-    VIPS_INIT(argv[0]);
+    //VIPS_INIT(argv[0]);
 
     mdpMainWindow mainWindow;
     mainWindow.setObjectName(QStringLiteral("mainWindow"));
     mainWindow.show();
     int result = app.exec();
 
-    vips_shutdown();
+    //vips_shutdown();
     //DestroyMagick();
 
     return result;

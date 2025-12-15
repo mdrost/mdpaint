@@ -4,8 +4,8 @@
 // XXX: Keep this file in sync with <mdpaint/api.h>.
 
 #if defined(_WIN32)
-# define MDP_PRIVATE_API_EXPORT __declspec(dllexport)
-# define MDP_PRIVATE_API_IMPORT __declspec(dllimport)
+# define MDP_PRIVATE_API_EXPORT //__declspec(dllexport)
+# define MDP_PRIVATE_API_IMPORT //__declspec(dllimport)
 #elif defined(__GNUC__)
 # define MDP_PRIVATE_API_EXPORT __attribute__((__visibility__("default")))
 # define MDP_PRIVATE_API_IMPORT

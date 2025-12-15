@@ -8,21 +8,26 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules")
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 add_subdirectory(interface/mdpaint)
 add_subdirectory(private/mdpaint/private)
-add_subdirectory(backends/cairo)
-add_subdirectory(backends/vips)
+if(MDPAINT_WITH_CAIRO)
+    add_subdirectory(backends/cairo)
+endif()
+if(MDPAINT_WITH_VIPS)
+    add_subdirectory(backends/vips)
+endif()
 
 set(TS_FILES mdpaint_pl_PL.ts)
 
@@ -85,19 +90,31 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-find_package(Vips REQUIRED)
-find_package(GLIB2 REQUIRED)
 target_compile_definitions(mdpaint PRIVATE QT_NO_KEYWORDS)
 target_link_libraries(mdpaint
     PUBLIC
     PRIVATE
         mdpaint::interface
-        mdpaint::cairo
-        mdpaint::vips
-        Vips::Vips
-        GLIB2::GLIB2
         Qt${QT_VERSION_MAJOR}::Widgets
 )
+if(MDPAINT_WITH_CAIRO)
+    target_link_libraries(mdpaint
+        PUBLIC
+        PRIVATE
+            mdpaint::cairo
+    )
+endif()
+if(MDPAINT_WITH_VIPS)
+    find_package(Vips REQUIRED)
+    find_package(GLIB2 REQUIRED)
+    target_link_libraries(mdpaint
+        PUBLIC
+        PRIVATE
+            mdpaint::vips
+            Vips::Vips
+            GLIB2::GLIB2
+    )
+endif()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
