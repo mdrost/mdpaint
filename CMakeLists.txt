@@ -15,13 +15,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Boost REQUIRED)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 add_subdirectory(interface/mdpaint)
 add_subdirectory(private/mdpaint/private)
-add_subdirectory(backends/mdpaint/cairo2)
+add_subdirectory(backends/cairo)
 
 set(TS_FILES mdpaint_pl_PL.ts)
 
@@ -85,7 +84,13 @@ else()
 endif()
 
 target_compile_definitions(mdpaint PRIVATE QT_NO_KEYWORDS)
-target_link_libraries(mdpaint PRIVATE mdpaint::interface mdpaint::cairo2 Boost::headers Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(mdpaint
+    PUBLIC
+    PRIVATE
+        mdpaint::interface
+        mdpaint::cairo
+        Qt${QT_VERSION_MAJOR}::Widgets
+)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

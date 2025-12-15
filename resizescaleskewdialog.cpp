@@ -56,13 +56,13 @@ mdpResizeScaleSkewDialog::mdpResizeScaleSkewDialog(int currentWidth, int current
     skewHorizontalSpinBox->setObjectName(QStringLiteral("skewHorizontalSpinBox"));
     skewHorizontalSpinBox->setRange(-89, 89);
     skewHorizontalSpinBox->setSuffix(QStringLiteral("°"));
-    skewHorizontalSpinBox->setValue(m_resizeScaleSkewData.horizontalSkew);
+    skewHorizontalSpinBox->setValue(m_resizeScaleSkewData.skewX);
     skewLayout->addWidget(skewHorizontalSpinBox, 1, 0);
     QSpinBox* skewVerticalSpinBox = new mdpSpinBox(this);
     skewVerticalSpinBox->setObjectName(QStringLiteral("skewVerticalSpinBox"));
     skewVerticalSpinBox->setRange(-89, 89);
     skewVerticalSpinBox->setSuffix(QStringLiteral("°"));
-    skewVerticalSpinBox->setValue(m_resizeScaleSkewData.verticalSkew);
+    skewVerticalSpinBox->setValue(m_resizeScaleSkewData.skewY);
     skewLayout->addWidget(skewVerticalSpinBox, 1, 1);
 }
 

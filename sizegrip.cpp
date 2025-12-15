@@ -3,6 +3,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 
+#include <algorithm>
+
 // public
 mdpSizeGrip::mdpSizeGrip(Type type, QWidget* resizable, QWidget* parent) :
     QWidget(parent),

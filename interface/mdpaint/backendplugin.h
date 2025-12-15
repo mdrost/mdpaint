@@ -32,7 +32,7 @@ public:
     virtual std::unique_ptr<mdpTool> createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData()> getResizeScaleSkewData, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) = 0;
 };
 
 #endif // MDP_BACKENDPLUGIN_H

@@ -6,6 +6,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 
+#include <functional>
+
 // public
 mdpImageView::mdpImageView(mdpImageModel& imageModel, QWidget* parent) :
     QWidget(parent),

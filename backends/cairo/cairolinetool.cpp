@@ -1,14 +1,15 @@
-#include "cairo2linetool.h"
+#include "cairolinetool.h"
 
-#include "cairo2historyentry.h"
-#include "cairo2model.h"
+#include "cairohistoryentry.h"
+#include "cairomodel.h"
 
 #include <mdpaint/history.h>
 
+#include <functional>
 #include <stdexcept>
 
 // public
-mdpCairo2LineTool::mdpCairo2LineTool(mdpCairo2Model& cairoModel, mdpHistory& history) :
+mdpCairoLineTool::mdpCairoLineTool(mdpCairoModel& cairoModel, mdpHistory& history) :
     m_cairoModel(cairoModel),
     m_history(history),
     m_previewSurface(nullptr),
@@ -18,20 +19,20 @@ mdpCairo2LineTool::mdpCairo2LineTool(mdpCairo2Model& cairoModel, mdpHistory& his
 }
 
 // public
-mdpCairo2LineTool::~mdpCairo2LineTool()
+mdpCairoLineTool::~mdpCairoLineTool()
 {
 }
 
 // public virtual
-void mdpCairo2LineTool::activate() /* override */
+void mdpCairoLineTool::activate() /* override */
 {
     m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();
-    onCairoModelPreviewResetConnection = m_cairoModel.onPreviewReset(std::bind(&mdpCairo2LineTool::onCairoModelPreviewReset, this));
+    onCairoModelPreviewResetConnection = m_cairoModel.onPreviewReset(std::bind(&mdpCairoLineTool::onCairoModelPreviewReset, this));
 }
 
 // public virtual
-void mdpCairo2LineTool::deactivate() /* override */
+void mdpCairoLineTool::deactivate() /* override */
 {
     onCairoModelPreviewResetConnection.disconnect();
     m_previewContext = nullptr;
@@ -39,7 +40,7 @@ void mdpCairo2LineTool::deactivate() /* override */
 }
 
 // public virtual
-void mdpCairo2LineTool::mousePressEvent(const int x, const int y) /* override */
+void mdpCairoLineTool::mousePressEvent(const int x, const int y) /* override */
 {
     m_drawing = true;
     m_cairoModel.beginDrawing();
@@ -50,17 +51,17 @@ void mdpCairo2LineTool::mousePressEvent(const int x, const int y) /* override */
 }
 
 // public virtual
-void mdpCairo2LineTool::mouseReleaseEvent(const int x, const int y) /* override */
+void mdpCairoLineTool::mouseReleaseEvent(const int x, const int y) /* override */
 {
     if (m_drawing) {
-        m_history.push(new mdpCairo2HistoryEntry("Line", m_cairoModel, m_previewSurface, m_previewContext));
+        //m_history.push(new mdpCairoHistoryEntry("Line", m_cairoModel, m_previewSurface, m_previewContext));
         m_cairoModel.submit();
         m_drawing = false;
     }
 }
 
 // public virtual
-void mdpCairo2LineTool::mouseMoveEvent(const int x, const int y) /* override */
+void mdpCairoLineTool::mouseMoveEvent(const int x, const int y) /* override */
 {
     m_cairoModel.beginDrawing();
     m_cairoModel.refresh();
@@ -74,12 +75,12 @@ void mdpCairo2LineTool::mouseMoveEvent(const int x, const int y) /* override */
 }
 
 // public virtual
-void mdpCairo2LineTool::enterEvent() /* override */
+void mdpCairoLineTool::enterEvent() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2LineTool::leaveEvent() /* override */
+void mdpCairoLineTool::leaveEvent() /* override */
 {
     m_cairoModel.beginDrawing();
     m_cairoModel.refresh();
@@ -87,7 +88,7 @@ void mdpCairo2LineTool::leaveEvent() /* override */
 }
 
 // private
-void mdpCairo2LineTool::draw(const int x, const int y)
+void mdpCairoLineTool::draw(const int x, const int y)
 {
     cairo_t* const context = m_previewContext;
     cairo_set_antialias(context, CAIRO_ANTIALIAS_NONE);
@@ -106,7 +107,7 @@ void mdpCairo2LineTool::draw(const int x, const int y)
 }
 
 // private
-void mdpCairo2LineTool::draw(const int fromX, const int fromY, const int toX, const int toY)
+void mdpCairoLineTool::draw(const int fromX, const int fromY, const int toX, const int toY)
 {
     cairo_t* const context = m_previewContext;
     cairo_set_antialias(context, CAIRO_ANTIALIAS_NONE);
@@ -127,7 +128,7 @@ void mdpCairo2LineTool::draw(const int fromX, const int fromY, const int toX, co
 }
 
 // private slot
-void mdpCairo2LineTool::onCairoModelPreviewReset()
+void mdpCairoLineTool::onCairoModelPreviewReset()
 {
     m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();

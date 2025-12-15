@@ -1,15 +1,15 @@
-#ifndef MDP_CAIRO2BACKENDPLUGIN_H
-#define MDP_CAIRO2BACKENDPLUGIN_H
+#ifndef MDP_CAIROBACKENDPLUGIN_H
+#define MDP_CAIROBACKENDPLUGIN_H
 
 #include <mdpaint/backendplugin.h>
 
-class mdpCairo2BackendPlugin : public mdpBackendPlugin
+class mdpCairoBackendPlugin : public mdpBackendPlugin
 {
 public:
 
-    explicit mdpCairo2BackendPlugin();
+    explicit mdpCairoBackendPlugin();
 
-    ~mdpCairo2BackendPlugin() override;
+    ~mdpCairoBackendPlugin() override;
 
     [[nodiscard]]
     std::unique_ptr<mdpImageModel> createImageModel() override;
@@ -27,7 +27,7 @@ public:
     std::unique_ptr<mdpTool> createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) override;
 
     [[nodiscard]]
-    std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData()> getResizeScaleSkewData, mdpHistory& history) override;
+    std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) override;
 };
 
-#endif // MDP_CAIRO2BACKENDPLUGIN_H
+#endif // MDP_CAIROBACKENDPLUGIN_H

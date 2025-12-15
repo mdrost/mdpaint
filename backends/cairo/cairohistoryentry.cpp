@@ -1,7 +1,7 @@
-#include "cairo2historyentry.h"
+#include "cairohistoryentry.h"
 
 // public
-mdpCairo2HistoryEntry::mdpCairo2HistoryEntry(std::string description, mdpCairo2Model& cairoModel, cairo_surface_t* surface, cairo_t* context) :
+mdpCairoHistoryEntry::mdpCairoHistoryEntry(std::string description, mdpCairoModel& cairoModel, cairo_surface_t* surface, cairo_t* context) :
     m_description(std::move(description)),
     m_cairoModel(cairoModel),
     m_surface(surface),
@@ -19,22 +19,22 @@ mdpCairo2HistoryEntry::mdpCairo2HistoryEntry(std::string description, mdpCairo2M
 }
 
 // public virtual
-mdpCairo2HistoryEntry::~mdpCairo2HistoryEntry() /* override */
+mdpCairoHistoryEntry::~mdpCairoHistoryEntry() /* override */
 {
     cairo_destroy(m_context);
     cairo_surface_destroy(m_surface);
 }
 
 // public virtual
-const char* mdpCairo2HistoryEntry::description() /* override */
+const char* mdpCairoHistoryEntry::description() /* override */
 {
     return m_description.c_str();
 }
 
 // public virtual
-void mdpCairo2HistoryEntry::restore() /* override */
+void mdpCairoHistoryEntry::restore() /* override */
 {
-    mdpCairo2Model& cairoModel = m_cairoModel;
+    mdpCairoModel& cairoModel = m_cairoModel;
     cairoModel.beginDrawing();
     cairoModel.setPreview(m_surface, m_context);
     cairoModel.endDrawing();

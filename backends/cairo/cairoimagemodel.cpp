@@ -1,9 +1,9 @@
-#include "cairo2imagemodel.h"
+#include "cairoimagemodel.h"
 
 #include <mdpaint/private/boostsignals2signalconnectionprivate.h>
 
 // public
-mdpCairo2ImageModel::mdpCairo2ImageModel() :
+mdpCairoImageModel::mdpCairoImageModel() :
     m_previewSurface(nullptr),
     m_previewContext(nullptr),
     m_data(nullptr),
@@ -35,7 +35,7 @@ mdpCairo2ImageModel::mdpCairo2ImageModel() :
 }
 
 // public virtual
-mdpCairo2ImageModel::~mdpCairo2ImageModel() /* override */
+mdpCairoImageModel::~mdpCairoImageModel() /* override */
 {
     ::operator delete[](m_data, std::align_val_t(32)); // TODO: is there prettier syntax?
     cairo_destroy(m_previewContext);
@@ -45,38 +45,38 @@ mdpCairo2ImageModel::~mdpCairo2ImageModel() /* override */
 }
 
 // public virtual
-cairo_surface_t* mdpCairo2ImageModel::getBaseSurface() /* override */
+cairo_surface_t* mdpCairoImageModel::getBaseSurface() /* override */
 {
     return m_baseSurface;
 }
 
 // public virtual
-cairo_t* mdpCairo2ImageModel::getBaseContext() /* override */
+cairo_t* mdpCairoImageModel::getBaseContext() /* override */
 {
     return m_baseContext;
 }
 
 // public virtual
-cairo_surface_t* mdpCairo2ImageModel::getPreviewSurface() /* override */
+cairo_surface_t* mdpCairoImageModel::getPreviewSurface() /* override */
 {
     return m_previewSurface;
 }
 
 // public virtual
-cairo_t* mdpCairo2ImageModel::getPreviewContext() /* override */
+cairo_t* mdpCairoImageModel::getPreviewContext() /* override */
 {
     return m_previewContext;
 }
 
 // public virtual
-void mdpCairo2ImageModel::beginDrawing() /* override */
+void mdpCairoImageModel::beginDrawing() /* override */
 {
     assert(!m_drawing);
     m_drawing = true;
 }
 
 // public virtual
-void mdpCairo2ImageModel::endDrawing() /* override */
+void mdpCairoImageModel::endDrawing() /* override */
 {
     assert(m_drawing);
     const bool reallocatedOrReshaped = endDrawingInternal();
@@ -90,7 +90,7 @@ void mdpCairo2ImageModel::endDrawing() /* override */
 }
 
 // public virtual
-void mdpCairo2ImageModel::refresh() /* override */
+void mdpCairoImageModel::refresh() /* override */
 {
     assert(m_drawing);
     cairo_surface_t* const baseSurface = m_baseSurface;
@@ -101,8 +101,8 @@ void mdpCairo2ImageModel::refresh() /* override */
     int previewWidth;
     int previewHeight;
     if (previewSurface != nullptr) {
-        previewWidth = cairo_image_surface_get_width(baseSurface);
-        previewHeight = cairo_image_surface_get_height(baseSurface);
+        previewWidth = cairo_image_surface_get_width(previewSurface);
+        previewHeight = cairo_image_surface_get_height(previewSurface);
     }
     if (previewSurface == nullptr || previewWidth != baseWidth || previewHeight != baseHeight) {
         cairo_surface_t* const newPreviewSurface = cairo_surface_create_similar_image(
@@ -123,13 +123,11 @@ void mdpCairo2ImageModel::refresh() /* override */
             cairo_surface_destroy(newPreviewSurface);
             throw std::runtime_error(cairo_status_to_string(status));
         }
-        if (previewSurface == nullptr) {
-            cairo_destroy(previewContext);
-            cairo_surface_destroy(previewSurface);
-        }
-        m_previewSurface = newPreviewSurface;
-        m_previewContext = newPreviewContext;
-        m_previewResetSignal();
+        // XXX: All that referencing inside setPreview() only to be counteracted by unreferencing here later
+        // is a little waste of CPU cycles:
+        setPreview(newPreviewSurface, newPreviewContext);
+        cairo_destroy(newPreviewContext);
+        cairo_surface_destroy(newPreviewSurface);
     }
     else {
         cairo_set_operator(previewContext, CAIRO_OPERATOR_SOURCE);
@@ -142,7 +140,7 @@ void mdpCairo2ImageModel::refresh() /* override */
 }
 
 // public virtual
-void mdpCairo2ImageModel::submit() /* override */
+void mdpCairoImageModel::submit() /* override */
 {
     cairo_surface_t* const oldBaseSurface = m_baseSurface;
     cairo_t* const oldBaseContext = m_baseContext;
@@ -169,7 +167,7 @@ void mdpCairo2ImageModel::submit() /* override */
 }
 
 // public virtual
-void mdpCairo2ImageModel::setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) /* override */
+void mdpCairoImageModel::setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) /* override */
 {
     assert(m_drawing);
     cairo_surface_reference(newPreviewSurface);
@@ -189,48 +187,48 @@ void mdpCairo2ImageModel::setPreview(cairo_surface_t* newPreviewSurface, cairo_t
 }
 
 // public virtual
-mdpSignalConnection mdpCairo2ImageModel::onPreviewReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpCairoImageModel::onPreviewReset(std::function<void ()> slot) /* override */
 {
     return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_previewResetSignal.connect(slot))));
 }
 
 // public virtual
-const unsigned char* mdpCairo2ImageModel::data() const /* override */
+const unsigned char* mdpCairoImageModel::data() const /* override */
 {
     return m_data;
 }
 
 // public virtual
-int mdpCairo2ImageModel::width() const /* override */
+int mdpCairoImageModel::width() const /* override */
 {
     return m_dataWidth;
 }
 
 // public virtual
-int mdpCairo2ImageModel::height() const /* override */
+int mdpCairoImageModel::height() const /* override */
 {
     return m_dataHeight;
 }
 
 // public virtual
-int mdpCairo2ImageModel::stride() const /* override */
+int mdpCairoImageModel::stride() const /* override */
 {
     return m_dataStride;
 }
 
 // public virtual
-mdpSignalConnection mdpCairo2ImageModel::onDataChanged(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpCairoImageModel::onDataChanged(std::function<void ()> slot) /* override */
 {
     return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_dataChangedSignal.connect(slot))));
 }
 
 // public virtual
-mdpSignalConnection mdpCairo2ImageModel::onDataReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpCairoImageModel::onDataReset(std::function<void ()> slot) /* override */
 {
     return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_dataResetSignal.connect(slot))));
 }
 
-bool mdpCairo2ImageModel::endDrawingInternal()
+bool mdpCairoImageModel::endDrawingInternal()
 {
     cairo_surface_t* const surface = m_previewSurface;
     unsigned char* data = cairo_image_surface_get_data(surface);

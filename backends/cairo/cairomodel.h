@@ -1,5 +1,5 @@
-#ifndef MDP_CAIRO2MODEL_H
-#define MDP_CAIRO2MODEL_H
+#ifndef MDP_CAIROMODEL_H
+#define MDP_CAIROMODEL_H
 
 #include <mdpaint/signalconnection.h>
 
@@ -7,13 +7,13 @@
 
 #include <functional>
 
-class mdpCairo2Model
+class mdpCairoModel
 {
 public:
 
-    explicit mdpCairo2Model();
+    explicit mdpCairoModel();
 
-    virtual ~mdpCairo2Model();
+    virtual ~mdpCairoModel();
 
     virtual cairo_surface_t* getBaseSurface() = 0;
 
@@ -36,4 +36,4 @@ public:
     virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
 };
 
-#endif // MDP_CAIRO2MODEL_H
+#endif // MDP_CAIROMODEL_H

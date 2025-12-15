@@ -1,14 +1,17 @@
-#include "cairo2pentool.h"
+#include "cairoellipsetool.h"
 
-#include "cairo2historyentry.h"
-#include "cairo2model.h"
+#include "cairohistoryentry.h"
+#include "cairomodel.h"
 
 #include <mdpaint/history.h>
 
+#include <functional>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <stdexcept>
 
 // public
-mdpCairo2PenTool::mdpCairo2PenTool(mdpCairo2Model& cairoModel, mdpHistory& history) :
+mdpCairoEllipseTool::mdpCairoEllipseTool(mdpCairoModel& cairoModel, mdpHistory& history) :
     m_cairoModel(cairoModel),
     m_history(history),
     m_previewSurface(nullptr),
@@ -18,20 +21,20 @@ mdpCairo2PenTool::mdpCairo2PenTool(mdpCairo2Model& cairoModel, mdpHistory& histo
 }
 
 // public virtual
-mdpCairo2PenTool::~mdpCairo2PenTool() /* override */
+mdpCairoEllipseTool::~mdpCairoEllipseTool() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2PenTool::activate() /* override */
+void mdpCairoEllipseTool::activate() /* override */
 {
     m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();
-    onCairoModelPreviewResetConnection = m_cairoModel.onPreviewReset(std::bind(&mdpCairo2PenTool::onCairoModelPreviewReset, this));
+    onCairoModelPreviewResetConnection = m_cairoModel.onPreviewReset(std::bind(&mdpCairoEllipseTool::onCairoModelPreviewReset, this));
 }
 
 // public virtual
-void mdpCairo2PenTool::deactivate() /* override */
+void mdpCairoEllipseTool::deactivate() /* override */
 {
     onCairoModelPreviewResetConnection.disconnect();
     m_previewContext = nullptr;
@@ -39,49 +42,47 @@ void mdpCairo2PenTool::deactivate() /* override */
 }
 
 // public virtual
-void mdpCairo2PenTool::mousePressEvent(const int x, const int y) /* override */
+void mdpCairoEllipseTool::mousePressEvent(const int x, const int y) /* override */
 {
     m_drawing = true;
     m_cairoModel.beginDrawing();
     draw(x, y);
-    m_lastX = x;
-    m_lastY = y;
+    m_startingX = x;
+    m_startingY = y;
     m_cairoModel.endDrawing();
 }
 
 // public virtual
-void mdpCairo2PenTool::mouseReleaseEvent(const int x, const int y) /* override */
+void mdpCairoEllipseTool::mouseReleaseEvent(const int x, const int y) /* override */
 {
     if (m_drawing) {
-        m_history.push(new mdpCairo2HistoryEntry("Pen", m_cairoModel, m_previewSurface, m_previewContext));
+        //m_history.push(new mdpCairoHistoryEntry("Ellipse", m_cairoModel, m_previewSurface, m_previewContext));
         m_cairoModel.submit();
         m_drawing = false;
     }
 }
 
 // public virtual
-void mdpCairo2PenTool::mouseMoveEvent(const int x, const int y) /* override */
+void mdpCairoEllipseTool::mouseMoveEvent(const int x, const int y) /* override */
 {
     m_cairoModel.beginDrawing();
+    m_cairoModel.refresh();
     if (m_drawing) {
-        draw(m_lastX, m_lastY, x, y);
-        m_lastX = x;
-        m_lastY = y;
+        draw(m_startingX, m_startingY, x, y);
     }
     else {
-        m_cairoModel.refresh();
         draw(x, y);
     }
     m_cairoModel.endDrawing();
 }
 
 // public virtual
-void mdpCairo2PenTool::enterEvent() /* override */
+void mdpCairoEllipseTool::enterEvent() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2PenTool::leaveEvent() /* override */
+void mdpCairoEllipseTool::leaveEvent() /* override */
 {
     m_cairoModel.beginDrawing();
     m_cairoModel.refresh();
@@ -89,7 +90,7 @@ void mdpCairo2PenTool::leaveEvent() /* override */
 }
 
 // private
-void mdpCairo2PenTool::draw(const int x, const int y)
+void mdpCairoEllipseTool::draw(const int x, const int y)
 {
     cairo_t* const context = m_previewContext;
     cairo_set_antialias(context, CAIRO_ANTIALIAS_NONE);
@@ -108,7 +109,7 @@ void mdpCairo2PenTool::draw(const int x, const int y)
 }
 
 // private
-void mdpCairo2PenTool::draw(const int fromX, const int fromY, const int toX, const int toY)
+void mdpCairoEllipseTool::draw(const int fromX, const int fromY, const int toX, const int toY)
 {
     cairo_t* const context = m_previewContext;
     cairo_set_antialias(context, CAIRO_ANTIALIAS_NONE);
@@ -118,10 +119,25 @@ void mdpCairo2PenTool::draw(const int fromX, const int fromY, const int toX, con
     cairo_set_line_width(context, 1);
     const double exactFromX = fromX + 0.5;
     const double exactFromY = fromY + 0.5;
-    const double exactToX = toX + 0.5;
-    const double exactToY = toY + 0.5;
-    cairo_move_to(context, exactFromX, exactFromY);
-    cairo_line_to(context, exactToX, exactToY);
+    const int width = toX - fromX;
+    const int height = toY - fromY;
+    const double radiusX = width / 2.0;
+    const double radiusY = height / 2.0;
+    if (radiusX == 0.0 && radiusY == 0.0) {
+        cairo_move_to(context, exactFromX, exactFromY);
+        cairo_close_path(context);
+    }
+    else if (radiusX == 0.0 || radiusY == 0.0) {
+        cairo_move_to(context, exactFromX, exactFromY);
+        cairo_line_to(context, exactFromX + width, exactFromY + height);
+    }
+    else {
+        cairo_save(context);
+        cairo_translate(context, exactFromX + radiusX, exactFromY + radiusY);
+        cairo_scale(context, radiusX, radiusY);
+        cairo_arc(context, 0.0, 0.0, 1.0, 0.0, 2.0 * M_PI);
+        cairo_restore(context);
+    }
     cairo_stroke(context);
     if (const cairo_status_t status = cairo_status(context); status != CAIRO_STATUS_SUCCESS) {
         throw std::runtime_error(cairo_status_to_string(status));
@@ -129,7 +145,7 @@ void mdpCairo2PenTool::draw(const int fromX, const int fromY, const int toX, con
 }
 
 // private slot
-void mdpCairo2PenTool::onCairoModelPreviewReset()
+void mdpCairoEllipseTool::onCairoModelPreviewReset()
 {
     m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();

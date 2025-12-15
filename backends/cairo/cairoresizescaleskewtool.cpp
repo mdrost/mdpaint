@@ -1,7 +1,7 @@
-#include "cairo2resizescaleskewtool.h"
+#include "cairoresizescaleskewtool.h"
 
-#include "cairo2historyentry.h"
-#include "cairo2model.h"
+#include "cairohistoryentry.h"
+#include "cairomodel.h"
 
 #include <mdpaint/history.h>
 
@@ -9,62 +9,62 @@
 #include <stdexcept>
 
 // public
-mdpCairo2ResizeScaleSkewTool::mdpCairo2ResizeScaleSkewTool(mdpCairo2Model& cairoModel, std::function<mdpResizeScaleSkewData()> getResizeScaleData, mdpHistory& history) :
+mdpCairoResizeScaleSkewTool::mdpCairoResizeScaleSkewTool(mdpCairoModel& cairoModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) :
     m_cairoModel(cairoModel),
-    m_getResizeScaleSkewData(std::move(getResizeScaleData)),
+    m_getResizeScaleSkewData(std::move(getResizeScaleSkewData)),
     m_history(history)
 {
 }
 
 // public virtual
-mdpCairo2ResizeScaleSkewTool::~mdpCairo2ResizeScaleSkewTool() /* override */
+mdpCairoResizeScaleSkewTool::~mdpCairoResizeScaleSkewTool() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::activate() /* override */
+void mdpCairoResizeScaleSkewTool::activate() /* override */
 {
-    mdpResizeScaleSkewData resizeScaleData = m_getResizeScaleSkewData();
-    resizeScaleSkew(resizeScaleData);
+    mdpResizeScaleSkewData resizeScaleSkewData = m_getResizeScaleSkewData();
+    resizeScaleSkew(resizeScaleSkewData);
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::deactivate() /* override */
-{
-}
-
-// public virtual
-void mdpCairo2ResizeScaleSkewTool::mousePressEvent(const int x, const int y) /* override */
+void mdpCairoResizeScaleSkewTool::deactivate() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::mouseReleaseEvent(const int x, const int y) /* override */
+void mdpCairoResizeScaleSkewTool::mousePressEvent(const int x, const int y) /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::mouseMoveEvent(const int x, const int y) /* override */
+void mdpCairoResizeScaleSkewTool::mouseReleaseEvent(const int x, const int y) /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::enterEvent() /* override */
+void mdpCairoResizeScaleSkewTool::mouseMoveEvent(const int x, const int y) /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::leaveEvent() /* override */
+void mdpCairoResizeScaleSkewTool::enterEvent() /* override */
 {
 }
 
 // public virtual
-void mdpCairo2ResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& resizeScaleData) /* override */
+void mdpCairoResizeScaleSkewTool::leaveEvent() /* override */
 {
-    const double x = -resizeScaleData.x;
-    const double y = -resizeScaleData.y;
-    const int newWidth = resizeScaleData.width;
-    const int newHeight = resizeScaleData.height;
+}
+
+// public virtual
+void mdpCairoResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& resizeScaleSkewData) /* override */
+{
+    const double x = -resizeScaleSkewData.x;
+    const double y = -resizeScaleSkewData.y;
+    const int newWidth = resizeScaleSkewData.width;
+    const int newHeight = resizeScaleSkewData.height;
     cairo_surface_t* previewSurface = m_cairoModel.getPreviewSurface();
     cairo_surface_t* newPreviewSurface = cairo_surface_create_similar_image(
         previewSurface,
@@ -76,7 +76,7 @@ void mdpCairo2ResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData&
         throw std::runtime_error(cairo_status_to_string(status));
     }
     cairo_t* newPreviewContext = cairo_create(newPreviewSurface);
-    if (resizeScaleData.scale) {
+    if (resizeScaleSkewData.scale) {
         const int width = cairo_image_surface_get_width(previewSurface);
         const int height = cairo_image_surface_get_height(previewSurface);
         const double xScale = newWidth / (double)width;
@@ -105,11 +105,18 @@ void mdpCairo2ResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData&
     if (const cairo_status_t status = cairo_status(newPreviewContext); status != CAIRO_STATUS_SUCCESS) {
         throw std::runtime_error(cairo_status_to_string(status));
     }
-    m_cairoModel.beginDrawing();
-    m_cairoModel.setPreview(newPreviewSurface, newPreviewContext);
-    m_cairoModel.endDrawing();
-    m_history.push(new mdpCairo2HistoryEntry("Resize", m_cairoModel, newPreviewSurface, newPreviewContext));
-    m_cairoModel.submit();
-    cairo_destroy(newPreviewContext);
-    cairo_surface_destroy(newPreviewSurface);
+    try {
+        m_cairoModel.beginDrawing();
+        m_cairoModel.setPreview(newPreviewSurface, newPreviewContext);
+        m_cairoModel.endDrawing();
+        //m_history.push(new mdpCairoHistoryEntry("Resize", m_cairoModel, newPreviewSurface, newPreviewContext));
+        m_cairoModel.submit();
+        cairo_destroy(newPreviewContext);
+        cairo_surface_destroy(newPreviewSurface);
+    }
+    catch (...) {
+        cairo_destroy(newPreviewContext);
+        cairo_surface_destroy(newPreviewSurface);
+        throw;
+    }
 }

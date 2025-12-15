@@ -7,11 +7,11 @@ struct mdpResizeScaleSkewData
 {
     int x;
     int y;
-    int width;
-    int height;
+    int width; // pre-skew
+    int height; // pre-skew
     bool scale;
-    double horizontalSkew;
-    double verticalSkew;
+    double skewX;
+    double skewY;
 };
 
 class mdpResizeScaleSkewTool : public mdpTool

@@ -1,21 +1,22 @@
-#ifndef MDP_CAIRO2PENTOOL_H
-#define MDP_CAIRO2PENTOOL_H
+#ifndef MDP_CAIROPENTOOL_H
+#define MDP_CAIROPENTOOL_H
 
 #include <mdpaint/signalconnection.h>
 #include <mdpaint/tool.h>
 
 #include <cairo/cairo.h>
 
-class mdpCairo2Model;
+class mdpCairoModel;
+
 class mdpHistory;
 
-class mdpCairo2PenTool final : public mdpTool
+class mdpCairoPenTool final : public mdpTool
 {
 public:
 
-    explicit mdpCairo2PenTool(mdpCairo2Model& cairoModel, mdpHistory& history);
+    explicit mdpCairoPenTool(mdpCairoModel& cairoModel, mdpHistory& history);
 
-    ~mdpCairo2PenTool() override;
+    ~mdpCairoPenTool() override;
 
     // mdpTool interface:
 
@@ -42,7 +43,7 @@ private:
     void onCairoModelPreviewReset();
 
 private:
-    mdpCairo2Model& m_cairoModel;
+    mdpCairoModel& m_cairoModel;
     mdpHistory& m_history;
     cairo_surface_t* m_previewSurface;
     cairo_t* m_previewContext;
@@ -52,4 +53,4 @@ private:
     int m_lastY;
 };
 
-#endif // MDP_CAIRO2PENTOOL_H
+#endif // MDP_CAIROPENTOOL_H

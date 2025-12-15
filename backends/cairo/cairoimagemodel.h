@@ -1,7 +1,7 @@
-#ifndef MDP_CAIRO2IMAGEMODEL_H
-#define MDP_CAIRO2IMAGEMODEL_H
+#ifndef MDP_CAIROIMAGEMODEL_H
+#define MDP_CAIROIMAGEMODEL_H
 
-#include "cairo2model.h"
+#include "cairomodel.h"
 
 #include <mdpaint/imagemodel.h>
 #include <mdpaint/signalconnection.h>
@@ -10,13 +10,13 @@
 
 #include <boost/signals2/signal.hpp>
 
-class mdpCairo2ImageModel final : public mdpCairo2Model, public mdpImageModel
+class mdpCairoImageModel final : public mdpCairoModel, public mdpImageModel
 {
 public:
 
-    explicit mdpCairo2ImageModel();
+    explicit mdpCairoImageModel();
 
-    ~mdpCairo2ImageModel() override;
+    ~mdpCairoImageModel() override;
 
     // mdpCairoModel interface:
 
@@ -73,4 +73,4 @@ private:
     boost::signals2::signal<void ()> m_dataResetSignal;
 };
 
-#endif // MDP_CAIRO2IMAGEMODEL_H
+#endif // MDP_CAIROIMAGEMODEL_H

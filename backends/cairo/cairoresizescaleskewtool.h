@@ -1,20 +1,21 @@
-#ifndef MDP_CAIRO2RESIZESCALESKEWTOOL_H
-#define MDP_CAIRO2RESIZESCALESKEWTOOL_H
+#ifndef MDP_CAIRORESIZESCALESKEWTOOL_H
+#define MDP_CAIRORESIZESCALESKEWTOOL_H
 
 #include <mdpaint/resizescaleskewtool.h>
 
 #include <functional>
 
-class mdpCairo2Model;
+class mdpCairoModel;
+
 class mdpHistory;
 
-class mdpCairo2ResizeScaleSkewTool final : public mdpResizeScaleSkewTool
+class mdpCairoResizeScaleSkewTool final : public mdpResizeScaleSkewTool
 {
 public:
 
-    explicit mdpCairo2ResizeScaleSkewTool(mdpCairo2Model& cairoModel, std::function<mdpResizeScaleSkewData()> getResizeScaleSkewData, mdpHistory& history);
+    explicit mdpCairoResizeScaleSkewTool(mdpCairoModel& cairoModel, std::function<mdpResizeScaleSkewData() > getResizeScaleSkewData, mdpHistory& history);
 
-    ~mdpCairo2ResizeScaleSkewTool() override;
+    ~mdpCairoResizeScaleSkewTool() override;
 
     // mdpTool interface:
 
@@ -37,9 +38,9 @@ public:
     void resizeScaleSkew(const mdpResizeScaleSkewData& resizeScaleSkewData) override;
 
 private:
-    mdpCairo2Model& m_cairoModel;
-    std::function<mdpResizeScaleSkewData()> m_getResizeScaleSkewData;
+    mdpCairoModel& m_cairoModel;
+    std::function<mdpResizeScaleSkewData() > m_getResizeScaleSkewData;
     mdpHistory& m_history;
 };
 
-#endif // MDP_CAIRO3RESIZESCALESKEWTOOL_H
+#endif // MDP_CAIRORESIZESCALESKEWTOOL_H

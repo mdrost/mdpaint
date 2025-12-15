@@ -15,7 +15,7 @@ set(SOURCES
     tool.cpp
 )
 
-add_library(mdpaint_interface
+add_library(mdpaint_interface SHARED
     ${SOURCES}
 )
 
@@ -23,6 +23,10 @@ target_include_directories(mdpaint_interface
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/..
     PRIVATE
+)
+
+set_target_properties(mdpaint_interface PROPERTIES
+    OUTPUT_NAME mdpaint
 )
 
 target_link_libraries(mdpaint_interface

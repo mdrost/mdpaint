@@ -66,3 +66,4 @@ unset(_GraphicsMagick_MagickCore_FOUND)
 unset(_GraphicsMagick_MagickCore_INCLUDE_DIR)
 unset(_GraphicsMagick_MagickCore_LIBRARY)
 unset(_GraphicsMagick_MagickCore_VERSION)
+

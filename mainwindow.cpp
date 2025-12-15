@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-#include <mdpaint/cairo2/cairo2backendplugin.h>
+#include <mdpaint/cairo/cairobackendplugin.h>
 #include "colorbox.h"
 #include "historyview.h"
 #include "imagecontainer.h"
@@ -17,6 +17,8 @@
 #include <QToolBar>
 #include <QUndoStack>
 
+#include <functional>
+
 // public
 mdpMainWindow::mdpMainWindow(QWidget* parent) :
     QMainWindow(parent)
@@ -25,7 +27,7 @@ mdpMainWindow::mdpMainWindow(QWidget* parent) :
     setContextMenuPolicy(Qt::NoContextMenu);
     setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowNestedDocks);
 
-    mdpCairo2BackendPlugin backendPlugin;
+    mdpCairoBackendPlugin backendPlugin;
     m_undoStack = new QUndoStack(this);
     m_imageModel = backendPlugin.createImageModel();
 
@@ -214,7 +216,7 @@ mdpMainWindow::mdpMainWindow(QWidget* parent) :
     resizeScaleSkewToolAction->setTool(m_resizeScaleSkewTool.get());
     resizeScaleSkewToolAction->setCheckable(true);
     resizeScaleSkewToolAction->setIcon(QIcon(QStringLiteral(":/icons/tool-resizescaleskew.png")));
-    resizeScaleSkewToolAction->setStatusTip(tr("Resize/scale the image."));
+    resizeScaleSkewToolAction->setStatusTip(tr("Resize, scale and skew the image."));
     m_toolBox->setresizeScaleSkewToolAction(resizeScaleSkewToolAction);
     m_toolActionGroup->addAction(resizeScaleSkewToolAction);
 
@@ -269,8 +271,16 @@ mdpResizeScaleSkewData mdpMainWindow::getResizeScaleSkewData()
 // private slot
 void mdpMainWindow::onImageContainerResize(const QRect& newGeometry)
 {
-    mdpResizeScaleSkewData resizeScaleData = {newGeometry.x(), newGeometry.y(), newGeometry.width(), newGeometry.height(), false, 0.0, 0.0};
-    m_resizeScaleSkewTool->resizeScaleSkew(resizeScaleData);
+    mdpResizeScaleSkewData resizeScaleSkewData = {
+        .x = newGeometry.x(),
+        .y = newGeometry.y(),
+        .width = newGeometry.width(),
+        .height = newGeometry.height(),
+        .scale = false,
+        .skewX = 0.0,
+        .skewY = 0.00
+    };
+    m_resizeScaleSkewTool->resizeScaleSkew(resizeScaleSkewData);
 }
 
 // private slot

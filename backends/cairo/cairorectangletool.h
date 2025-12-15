@@ -1,21 +1,22 @@
-#ifndef MDP_CAIRO2LINETOOL_H
-#define MDP_CAIRO2LINETOOL_H
+#ifndef MDP_CAIRORECTANGLETOOL_H
+#define MDP_CAIRORECTANGLETOOL_H
 
 #include <mdpaint/signalconnection.h>
 #include <mdpaint/tool.h>
 
 #include <cairo/cairo.h>
 
-class mdpCairo2Model;
+class mdpCairoModel;
+
 class mdpHistory;
 
-class mdpCairo2LineTool final : public mdpTool
+class mdpCairoRectangleTool final : public mdpTool
 {
 public:
 
-    explicit mdpCairo2LineTool(mdpCairo2Model& cairoModel, mdpHistory& history);
+    explicit mdpCairoRectangleTool(mdpCairoModel& cairoModel, mdpHistory& history);
 
-    ~mdpCairo2LineTool() override;
+    ~mdpCairoRectangleTool() override;
 
     // mdpTool interface:
 
@@ -42,7 +43,7 @@ private:
     void onCairoModelPreviewReset();
 
 private:
-    mdpCairo2Model& m_cairoModel;
+    mdpCairoModel& m_cairoModel;
     mdpHistory& m_history;
     cairo_surface_t* m_previewSurface;
     cairo_t* m_previewContext;
@@ -52,4 +53,4 @@ private:
     int m_startingY;
 };
 
-#endif // MDP_CAIRO2LINETOOL_H
+#endif // MDP_CAIRORECTANGLETOOL_H
