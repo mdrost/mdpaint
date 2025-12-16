@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.24)
 
 project(mdpaint VERSION 0.1 LANGUAGES CXX)
 
-if(POLICY CMP0167)
-  cmake_policy(SET CMP0167 OLD)
-endif()
-
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules")
 
 set(CMAKE_CXX_STANDARD 20)
