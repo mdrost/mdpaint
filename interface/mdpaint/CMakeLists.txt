@@ -24,6 +24,7 @@ target_compile_definitions(mdpaint_interface
     PUBLIC
     PRIVATE
         MDP_INTERFACE_EXPORTS
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_interface,TYPE>,SHARED_LIBRARY>:MDP_INTERFACE_BUILD_SHARED>
 )
 
 target_include_directories(mdpaint_interface

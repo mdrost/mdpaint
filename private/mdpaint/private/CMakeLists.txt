@@ -12,10 +12,11 @@ add_library(mdpaint_private STATIC
     ${SOURCES}
 )
 
-target_compile_definitions(mdpaint_interface
+target_compile_definitions(mdpaint_private
     PUBLIC
     PRIVATE
         MDP_PRIVATE_EXPORTS
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_private,TYPE>,SHARED_LIBRARY>:MDP_PRIVATE_BUILD_SHARED>
 )
 
 target_compile_definitions(mdpaint_private
