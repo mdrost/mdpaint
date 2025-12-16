@@ -1,3 +1,7 @@
+if(POLICY CMP0167)
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 find_package(Vips REQUIRED)
 find_package(Boost REQUIRED)
 find_package(GLIB2 REQUIRED)
