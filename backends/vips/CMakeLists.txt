@@ -33,6 +33,7 @@ target_compile_definitions(mdpaint_vips
     PUBLIC
     PRIVATE
         MDP_VIPS_EXPORTS
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_vips,TYPE>,SHARED_LIBRARY>:MDP_VIPS_BUILD_SHARED>
 )
 
 target_include_directories(mdpaint_vips
