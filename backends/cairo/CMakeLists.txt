@@ -31,6 +31,7 @@ target_compile_definitions(mdpaint_cairo
     PUBLIC
     PRIVATE
         MDP_CAIRO_EXPORTS
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_cairo,TYPE>,SHARED_LIBRARY>:MDP_CAIRO_BUILD_SHARED>
 )
 
 target_include_directories(mdpaint_cairo
