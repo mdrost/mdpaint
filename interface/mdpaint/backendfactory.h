@@ -9,13 +9,13 @@
 
 #include <memory>
 
-class MDP_INTERFACE_API mdpBackendPlugin
+class MDP_INTERFACE_API mdpBackendFactory
 {
 public:
 
-    explicit mdpBackendPlugin();
+    explicit mdpBackendFactory();
 
-    virtual ~mdpBackendPlugin();
+    virtual ~mdpBackendFactory();
 
     [[nodiscard]]
     virtual std::unique_ptr<mdpImageModel> createImageModel() = 0;

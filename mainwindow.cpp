@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-#include <mdpaint/cairo/cairobackendplugin.h>
+#include <mdpaint/cairo/cairobackendfactory.h>
 #include "colorbox.h"
 #include "historyview.h"
 #include "imagecontainer.h"
@@ -27,15 +27,15 @@ mdpMainWindow::mdpMainWindow(QWidget* parent) :
     setContextMenuPolicy(Qt::NoContextMenu);
     setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowNestedDocks);
 
-    mdpCairoBackendPlugin backendPlugin;
+    mdpCairoBackendFactory backendFactory;
     m_undoStack = new QUndoStack(this);
-    m_imageModel = backendPlugin.createImageModel();
+    m_imageModel = backendFactory.createImageModel();
 
-    m_penTool = backendPlugin.createPenTool(*m_imageModel, m_history);
-    m_lineTool = backendPlugin.createLineTool(*m_imageModel, m_history);
-    m_rectangleTool = backendPlugin.createRectangleTool(*m_imageModel, m_history);
-    m_ellipseTool = backendPlugin.createEllipseTool(*m_imageModel, m_history);
-    std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool = backendPlugin.createResizeScaleSkewTool(*m_imageModel, std::bind(&mdpMainWindow::getResizeScaleSkewData, this), m_history);
+    m_penTool = backendFactory.createPenTool(*m_imageModel, m_history);
+    m_lineTool = backendFactory.createLineTool(*m_imageModel, m_history);
+    m_rectangleTool = backendFactory.createRectangleTool(*m_imageModel, m_history);
+    m_ellipseTool = backendFactory.createEllipseTool(*m_imageModel, m_history);
+    std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool = backendFactory.createResizeScaleSkewTool(*m_imageModel, std::bind(&mdpMainWindow::getResizeScaleSkewData, this), m_history);
     m_resizeScaleSkewTool = std::make_unique<mdpResizeScaleSkewToolWrapper>(std::move(resizeScaleSkewTool));
     connect(m_resizeScaleSkewTool.get(), &mdpResizeScaleSkewToolWrapper::activated, this, &mdpMainWindow::onResizeScaleSkewToolActivated);
     m_activeTool = nullptr;

@@ -1,7 +1,7 @@
 set(SOURCES
     api.h
-    backendplugin.h
-    backendplugin.cpp
+    backendfactory.h
+    backendfactory.cpp
     history.h
     history.cpp
     historyentry.h
