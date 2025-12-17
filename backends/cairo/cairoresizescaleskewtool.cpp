@@ -75,8 +75,8 @@ void mdpCairoResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& 
     const  double tanSkewY = std::tan(skewY);
     double scaleX;
     double scaleY;
-    double offsetX = -std::min(tanSkewY * width, 0.0);
-    double offsetY = -std::min(tanSkewX * height, 0.0);
+    double offsetX = -std::min(tanSkewY * height, 0.0);
+    double offsetY = -std::min(tanSkewX * width, 0.0);
     if (resizeScaleSkewData.scale) {
         scaleX = width / (double)imageWidth;
         scaleY = height / (double)imageHeight;
