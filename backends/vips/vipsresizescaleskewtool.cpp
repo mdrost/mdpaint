@@ -75,8 +75,8 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const  double tanSkewY = std::tan(skewY);
     double scaleX;
     double scaleY;
-    gdouble offsetX = -std::min(tanSkewY * width, 0.0);
-    gdouble offsetY = -std::min(tanSkewX * height, 0.0);
+    gdouble offsetX = -std::min(tanSkewY * height, 0.0);
+    gdouble offsetY = -std::min(tanSkewX * width, 0.0);
     if (resizeScaleSkewData.scale) {
         scaleX = width / (double)imageWidth;
         scaleY = height / (double)imageHeight;
