@@ -73,8 +73,6 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const double skewY = resizeScaleSkewData.skewY;
     const  double tanSkewX = std::tan(skewX);
     const  double tanSkewY = std::tan(skewY);
-    const int newWidth = width + std::abs(tanSkewY) * width;
-    const int newHeight = height + std::abs(tanSkewX) * height;
     double scaleX;
     double scaleY;
     gdouble offsetX = -std::min(tanSkewY * width, 0.0);
@@ -89,17 +87,19 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
         scaleX = 1.0;
         scaleY = 1.0;
     }
+    const int newWidth = width + std::abs(tanSkewY) * width;
+    const int newHeight = height + std::abs(tanSkewX) * height;
+    VipsImage* newPreviewImage;
+    double xx = scaleX;
+    double xy = scaleX * tanSkewY;
+    double yx = scaleY * tanSkewX;
+    double yy = scaleY;
     const VipsArrayInt* const area = vips_array_int_newv(4, x, y, newWidth, newHeight);
     const VipsArrayDouble* const background = vips_array_double_newv(4, 255.0, 255.0, 255.0, 255.0 );
-    VipsImage* newPreviewImage;
-    double a = scaleX;
-    double b = scaleX * tanSkewY;
-    double c = scaleY * tanSkewX;
-    double d = scaleY;
     if (vips_affine(
             previewImage, &newPreviewImage,
-            a, b,
-            c, d,
+            xx, xy,
+            yx, yy,
             "oarea", area,
             "odx", offsetX,
             "ody", offsetY,
