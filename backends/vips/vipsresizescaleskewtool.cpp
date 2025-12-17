@@ -67,17 +67,21 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const int imageHeight = vips_image_get_height(previewImage);
     const int x = resizeScaleSkewData.x;
     const int y = resizeScaleSkewData.y;
+    const int width = resizeScaleSkewData.width;
+    const int height = resizeScaleSkewData.height;
     const double skewX = resizeScaleSkewData.skewX;
     const double skewY = resizeScaleSkewData.skewY;
-    const int newWidth = resizeScaleSkewData.width + std::abs(skewX) * resizeScaleSkewData.height;
-    const int newHeight = resizeScaleSkewData.height + std::abs(skewY) * resizeScaleSkewData.width;
+    const  double tanSkewX = std::tan(skewX);
+    const  double tanSkewY = std::tan(skewY);
+    const int newWidth = width + std::abs(tanSkewY) * width;
+    const int newHeight = height + std::abs(tanSkewX) * height;
     double scaleX;
     double scaleY;
-    gdouble offsetX = std::max(-skewX * imageWidth, 0.0);
-    gdouble offsetY = std::max(-skewY * imageHeight, 0.0);
+    gdouble offsetX = -std::min(tanSkewY * width, 0.0);
+    gdouble offsetY = -std::min(tanSkewX * height, 0.0);
     if (resizeScaleSkewData.scale) {
-        scaleX = (newWidth - std::abs(skewX) * imageHeight) / (double)imageWidth;
-        scaleY = (newHeight - std::abs(skewY) * imageWidth) / (double)imageHeight;
+        scaleX = width / (double)imageWidth;
+        scaleY = height / (double)imageHeight;
         offsetX += x;
         offsetY += y;
     }
@@ -88,10 +92,14 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const VipsArrayInt* const area = vips_array_int_newv(4, x, y, newWidth, newHeight);
     const VipsArrayDouble* const background = vips_array_double_newv(4, 255.0, 255.0, 255.0, 255.0 );
     VipsImage* newPreviewImage;
+    double a = scaleX;
+    double b = scaleX * tanSkewY;
+    double c = scaleY * tanSkewX;
+    double d = scaleY;
     if (vips_affine(
             previewImage, &newPreviewImage,
-            scaleX, skewX,
-            skewY, scaleY,
+            a, b,
+            c, d,
             "oarea", area,
             "odx", offsetX,
             "ody", offsetY,
