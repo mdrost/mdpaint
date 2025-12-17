@@ -91,8 +91,8 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const int newHeight = height + std::abs(tanSkewX) * width;
     VipsImage* newPreviewImage;
     double xx = scaleX;
-    double xy = scaleX * tanSkewY;
-    double yx = scaleY * tanSkewX;
+    double xy = scaleY * tanSkewY;
+    double yx = scaleX * tanSkewX;
     double yy = scaleY;
     const VipsArrayInt* const area = vips_array_int_newv(4, x, y, newWidth, newHeight);
     const VipsArrayDouble* const background = vips_array_double_newv(4, 255.0, 255.0, 255.0, 255.0 );
