@@ -87,8 +87,8 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
         scaleX = 1.0;
         scaleY = 1.0;
     }
-    const int newWidth = width + std::abs(tanSkewY) * width;
-    const int newHeight = height + std::abs(tanSkewX) * height;
+    const int newWidth = width + std::abs(tanSkewY) * height;
+    const int newHeight = height + std::abs(tanSkewX) * width;
     VipsImage* newPreviewImage;
     double xx = scaleX;
     double xy = scaleX * tanSkewY;
