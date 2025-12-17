@@ -1,17 +1,17 @@
-#ifndef MDP_VIPSBACKENDPLUGIN_H
-#define MDP_VIPSBACKENDPLUGIN_H
+#ifndef MDP_VIPSBACKENDFACTORY_H
+#define MDP_VIPSBACKENDFACTORY_H
 
 #include "api.h"
 
-#include <mdpaint/backendplugin.h>
+#include <mdpaint/backendfactory.h>
 
-class MDP_VIPS_API mdpVipsBackendPlugin : public mdpBackendPlugin
+class MDP_VIPS_API mdpVipsBackendFactory : public mdpBackendFactory
 {
 public:
 
-    explicit mdpVipsBackendPlugin();
+    explicit mdpVipsBackendFactory();
 
-    ~mdpVipsBackendPlugin() override;
+    ~mdpVipsBackendFactory() override;
 
     [[nodiscard]]
     std::unique_ptr<mdpImageModel> createImageModel() override;
@@ -32,4 +32,4 @@ public:
     std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) override;
 };
 
-#endif // MDP_VIPSBACKENDPLUGIN_H
+#endif // MDP_VIPSBACKENDFACTORY_H

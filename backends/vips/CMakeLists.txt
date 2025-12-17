@@ -8,8 +8,8 @@ find_package(GLIB2 REQUIRED)
 
 set(SOURCES
     include/mdpaint/vips/api.h
-    include/mdpaint/vips/vipsbackendplugin.h
-    vipsbackendplugin.cpp
+    include/mdpaint/vips/vipsbackendfactory.h
+    vipsbackendfactory.cpp
     vipsellipsetool.h
     vipsellipsetool.cpp
     vipshistoryentry.h
