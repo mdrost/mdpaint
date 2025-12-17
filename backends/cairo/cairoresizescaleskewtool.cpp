@@ -103,8 +103,8 @@ void mdpCairoResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& 
     cairo_pattern_set_filter(pattern, CAIRO_FILTER_BEST);
     cairo_matrix_t matrix;
     double xx = scaleX;
-    double xy = scaleX * tanSkewY;
-    double yx = scaleY * tanSkewX;
+    double xy = scaleY * tanSkewY;
+    double yx = scaleX * tanSkewX;
     double yy = scaleY;
     cairo_matrix_init(&matrix, xx, yx, xy, yy, offsetX, offsetY);
     if (const cairo_status_t status = cairo_matrix_invert(&matrix); status != CAIRO_STATUS_SUCCESS) {
