@@ -7,8 +7,8 @@ find_package(Boost REQUIRED)
 
 set(SOURCES
     include/mdpaint/cairo/api.h
-    include/mdpaint/cairo/cairobackendplugin.h
-    cairobackendplugin.cpp
+    include/mdpaint/cairo/cairobackendfactory.h
+    cairobackendfactory.cpp
     cairoellipsetool.h
     cairoellipsetool.cpp
     cairohistoryentry.h

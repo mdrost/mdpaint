@@ -3,15 +3,15 @@
 
 #include "api.h"
 
-#include <mdpaint/backendplugin.h>
+#include <mdpaint/backendfactory.h>
 
-class MDP_CAIRO_API mdpCairoBackendPlugin : public mdpBackendPlugin
+class MDP_CAIRO_API mdpCairoBackendFactory : public mdpBackendFactory
 {
 public:
 
-    explicit mdpCairoBackendPlugin();
+    explicit mdpCairoBackendFactory();
 
-    ~mdpCairoBackendPlugin() override;
+    ~mdpCairoBackendFactory() override;
 
     [[nodiscard]]
     std::unique_ptr<mdpImageModel> createImageModel() override;

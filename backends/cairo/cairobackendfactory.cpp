@@ -1,4 +1,4 @@
-#include "cairobackendplugin.h"
+#include "cairobackendfactory.h"
 
 #include "cairoellipsetool.h"
 #include "cairoimagemodel.h"
@@ -9,51 +9,51 @@
 #include "cairoresizescaleskewtool.h"
 
 // public
-mdpCairoBackendPlugin::mdpCairoBackendPlugin()
+mdpCairoBackendFactory::mdpCairoBackendFactory()
 {
 }
 
 // public virtual
-mdpCairoBackendPlugin::~mdpCairoBackendPlugin() /* override */
+mdpCairoBackendFactory::~mdpCairoBackendFactory() /* override */
 {
 }
 
 // public virtual
-std::unique_ptr<mdpImageModel> mdpCairoBackendPlugin::createImageModel() /* override */
+std::unique_ptr<mdpImageModel> mdpCairoBackendFactory::createImageModel() /* override */
 {
     return std::make_unique<mdpCairoImageModel>();
 }
 
 // public virtual
-std::unique_ptr<mdpTool> mdpCairoBackendPlugin::createPenTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
+std::unique_ptr<mdpTool> mdpCairoBackendFactory::createPenTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
 {
     mdpCairoModel& cairoModel = static_cast<mdpCairoImageModel&>(imageModel);
     return std::make_unique<mdpCairoPenTool>(cairoModel, history);
 }
 
 // public virtual
-std::unique_ptr<mdpTool> mdpCairoBackendPlugin::createLineTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
+std::unique_ptr<mdpTool> mdpCairoBackendFactory::createLineTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
 {
     mdpCairoModel& cairoModel = static_cast<mdpCairoImageModel&>(imageModel);
     return std::make_unique<mdpCairoLineTool>(cairoModel, history);
 }
 
 // public virtual
-std::unique_ptr<mdpTool> mdpCairoBackendPlugin::createRectangleTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
+std::unique_ptr<mdpTool> mdpCairoBackendFactory::createRectangleTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
 {
     mdpCairoModel& cairoModel = static_cast<mdpCairoImageModel&>(imageModel);
     return std::make_unique<mdpCairoRectangleTool>(cairoModel, history);
 }
 
 // public virtual
-std::unique_ptr<mdpTool> mdpCairoBackendPlugin::createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
+std::unique_ptr<mdpTool> mdpCairoBackendFactory::createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) /* override */
 {
     mdpCairoModel& cairoModel = static_cast<mdpCairoImageModel&>(imageModel);
     return std::make_unique<mdpCairoEllipseTool>(cairoModel, history);
 }
 
 // public virtual
-std::unique_ptr<mdpResizeScaleSkewTool> mdpCairoBackendPlugin::createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) /* override */
+std::unique_ptr<mdpResizeScaleSkewTool> mdpCairoBackendFactory::createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) /* override */
 {
     mdpCairoModel& cairoModel = static_cast<mdpCairoImageModel&>(imageModel);
     return std::make_unique<mdpCairoResizeScaleSkewTool>(cairoModel, std::move(getResizeScaleSkewData), history);
