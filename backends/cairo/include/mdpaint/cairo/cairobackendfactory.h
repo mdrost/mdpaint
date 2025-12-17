@@ -1,5 +1,5 @@
-#ifndef MDP_CAIROBACKENDPLUGIN_H
-#define MDP_CAIROBACKENDPLUGIN_H
+#ifndef MDP_CAIROBACKENDFACTORY_H
+#define MDP_CAIROBACKENDFACTORY_H
 
 #include "api.h"
 
@@ -32,4 +32,4 @@ public:
     std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) override;
 };
 
-#endif // MDP_CAIROBACKENDPLUGIN_H
+#endif // MDP_CAIROBACKENDFACTORY_H
