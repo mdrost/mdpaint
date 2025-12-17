@@ -87,8 +87,8 @@ void mdpCairoResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& 
         scaleX = 1.0;
         scaleY = 1.0;
     }
-    const int newWidth = width + std::abs(tanSkewY) * width;
-    const int newHeight = height + std::abs(tanSkewX) * height;
+    const int newWidth = width + std::abs(tanSkewY) * height;
+    const int newHeight = height + std::abs(tanSkewX) * width;
     cairo_surface_t* newPreviewSurface = cairo_surface_create_similar_image(
         previewSurface,
         cairo_image_surface_get_format(previewSurface),
