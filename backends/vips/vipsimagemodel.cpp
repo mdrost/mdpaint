@@ -34,8 +34,7 @@ mdpVipsImageModel::mdpVipsImageModel() :
     try {
         beginDrawing();
         refresh();
-        endDrawingInternal();
-        m_drawing = false;
+        endDrawing();
     }
     catch (...) {
         g_object_unref(m_baseImage);
@@ -115,6 +114,7 @@ void mdpVipsImageModel::refresh() /* override */
 // public virtual
 void mdpVipsImageModel::submit() /* override */
 {
+    assert(!m_drawing);
     VipsImage* const oldBaseImage = m_baseImage;
     m_baseImage = m_previewImage;
     m_previewImage = nullptr;
