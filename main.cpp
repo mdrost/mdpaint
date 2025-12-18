@@ -46,6 +46,7 @@
 //# include <winternl.h>
 //# include <ntstatus.h>
 #elif defined(__linux__)
+# include <dlfcn.h>
 #endif
 
 #include <mdpaint/plugin.h>
@@ -76,6 +77,15 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 #elif defined(__linux__)
+    std::string frontendPluginPath = "frontends/libmdpaintqt.so";
+    void* const frontendPlugin = dlopen(frontendPluginPath.c_str(), RTLD_NOW);
+    if (frontendPlugin == nullptr) {
+        return EXIT_FAILURE;
+    }
+    mdpCreatePluginFunction mdpCreatePlugin = reinterpret_cast<mdpCreatePluginFunction>(dlsym(frontendPlugin, "mdpCreatePlugin"));
+    if (mdpCreatePlugin == nullptr) {
+        return EXIT_FAILURE;
+    }
 #endif
     std::unique_ptr<mdpPlugin> plugin = mdpCreatePlugin(argc, argv);
     if (plugin == nullptr) {
