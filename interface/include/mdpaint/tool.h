@@ -1,0 +1,29 @@
+#ifndef MDP_INTERFACETOOL_H
+#define MDP_INTERFACETOOL_H
+
+#include "api.h"
+
+class MDP_INTERFACE_API mdpTool
+{
+public:
+
+    explicit mdpTool();
+
+    virtual ~mdpTool();
+
+    virtual void activate() = 0;
+
+    virtual void deactivate() = 0;
+
+    virtual void mousePressEvent(int x, int y) = 0;
+
+    virtual void mouseReleaseEvent(int x, int y) = 0;
+
+    virtual void mouseMoveEvent(int x, int y) = 0;
+
+    virtual void enterEvent() = 0;
+
+    virtual void leaveEvent() = 0;
+};
+
+#endif // MDP_INTERFACETOOL_H

@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>icons/tool-pen.png</file>
-        <file>icons/tool-line.png</file>
-        <file>icons/tool-rectangle.png</file>
-        <file>icons/tool-ellipse.png</file>
-        <file>icons/tool-resizescaleskew.png</file>
-    </qresource>
-</RCC>
