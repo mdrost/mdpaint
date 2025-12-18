@@ -3,7 +3,9 @@
 #include "cairobackendfactory.h"
 
 // public
-mdpCairoPlugin::mdpCairoPlugin(int& argc, char** const argv)
+mdpCairoPlugin::mdpCairoPlugin(int& argc, char** const argv) :
+    m_argc(argc),
+    m_argv(argv)
 {
 }
 

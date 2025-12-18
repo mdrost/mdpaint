@@ -1,5 +1,5 @@
-#ifndef MDP_CAIRO_API_H
-#define MDP_CAIRO_API_H
+#ifndef MDP_CAIROAPI_H
+#define MDP_CAIROAPI_H
 
 #include <mdpaint/api.h>
 
@@ -13,4 +13,4 @@
 # define MDP_CAIRO_API
 #endif
 
-#endif // MDP_CAIRO_API_H
+#endif // MDP_CAIROAPI_H

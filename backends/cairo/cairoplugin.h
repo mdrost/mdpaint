@@ -24,6 +24,8 @@ public:
     std::unique_ptr<mdpBackendFactory> createBackendFactory() override;
 
 private:
+    int& m_argc;
+    char** m_argv;
 };
 
 #if defined(_WIN32)
