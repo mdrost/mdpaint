@@ -61,4 +61,9 @@ target_link_libraries(mdpaint_vips
         GLIB2::GOBJECT
 )
 
+add_custom_command(TARGET mdpaint_vips POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            $<TARGET_FILE:mdpaint_vips>
+            "$<TARGET_FILE_DIR:mdpaint>/backends")
+
 add_library(mdpaint::vips ALIAS mdpaint_vips)

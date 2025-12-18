@@ -109,6 +109,8 @@ if(MDPAINT_WITH_CAIRO)
     )
 endif()
 if(MDPAINT_WITH_VIPS)
+    add_subdirectory(backends/vips)
+    add_dependencies(mdpaint mdpaint::vips)
     find_package(Vips REQUIRED)
     find_package(GLIB2 REQUIRED)
     target_link_libraries(mdpaint
