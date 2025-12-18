@@ -1,11 +1,9 @@
 #ifndef MDP_VIPSBACKENDFACTORY_H
 #define MDP_VIPSBACKENDFACTORY_H
 
-#include "api.h"
-
 #include <mdpaint/backendfactory.h>
 
-class MDP_VIPS_API mdpVipsBackendFactory : public mdpBackendFactory
+class mdpVipsBackendFactory : public mdpBackendFactory
 {
 public:
 

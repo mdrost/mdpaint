@@ -7,8 +7,8 @@ find_package(Boost REQUIRED)
 find_package(GLIB2 REQUIRED)
 
 set(SOURCES
-    include/mdpaint/vips/api.h
-    include/mdpaint/vips/vipsbackendfactory.h
+    vipsapi.h
+    vipsbackendfactory.h
     vipsbackendfactory.cpp
     vipsellipsetool.h
     vipsellipsetool.cpp
@@ -22,6 +22,8 @@ set(SOURCES
     vipsmodel.cpp
     vipspentool.h
     vipspentool.cpp
+    vipsplugin.h
+    vipsplugin.cpp
     vipsrectangletool.h
     vipsrectangletool.cpp
     vipsresizescaleskewtool.h
@@ -29,7 +31,7 @@ set(SOURCES
     vipssvgtemplates.h
 )
 
-add_library(mdpaint_vips SHARED
+add_library(mdpaint_vips MODULE
     ${SOURCES}
 )
 
@@ -37,14 +39,11 @@ target_compile_definitions(mdpaint_vips
     PUBLIC
     PRIVATE
         MDP_VIPS_EXPORTS
-        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_vips,TYPE>,SHARED_LIBRARY>:MDP_VIPS_BUILD_SHARED>
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_vips,TYPE>,MODULE_LIBRARY>:MDP_VIPS_BUILD_MODULE>
 )
 
 target_include_directories(mdpaint_vips
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/mdpaint/vips
 )
 
 set_target_properties(mdpaint_vips PROPERTIES
