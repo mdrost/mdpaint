@@ -100,6 +100,6 @@ void mdpQtLineTool::draw(const int fromX, const int fromY, const int toX, const 
 // private slot
 void mdpQtLineTool::onQtModelPreviewReset()
 {
-    m_previewImage = m_qtModel.getPreviewImage();
     m_previewPainter = m_qtModel.getPreviewPainter();
+    m_previewImage = m_qtModel.getPreviewImage();
 }

@@ -101,6 +101,6 @@ void mdpQtEllipseTool::draw(const int fromX, const int fromY, const int toX, con
 // private slot
 void mdpQtEllipseTool::onQtModelPreviewReset()
 {
-    m_previewImage = m_qtModel.getPreviewImage();
     m_previewPainter = m_qtModel.getPreviewPainter();
+    m_previewImage = m_qtModel.getPreviewImage();
 }

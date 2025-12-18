@@ -276,19 +276,9 @@ void mdpQtMainWindow::onImageContainerResize(const QRect& newGeometry)
         .y = newGeometry.y(),
         .width = newGeometry.width(),
         .height = newGeometry.height(),
-        //.x = 32,
-        //.y = 16,
-        //.width = 192,
-        //.height = 64,
         .scale = false,
         .skewX = 0.0,
         .skewY = 0.0
-        //.skewX = 0 * M_PI / 180.0,
-        //.skewY = 26.565 * M_PI / 180.0
-        //.skewX = -45 * M_PI / 180.0,
-        //.skewY = -30 * M_PI / 180.0
-        //.skewX = 0 * M_PI / 180.0,
-        //.skewY = 60 * M_PI / 180.0
     };
     m_resizeScaleSkewTool->resizeScaleSkew(resizeScaleSkewData);
 }
