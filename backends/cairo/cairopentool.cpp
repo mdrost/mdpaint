@@ -54,7 +54,7 @@ void mdpCairoPenTool::mousePressEvent(const int x, const int y) /* override */
 void mdpCairoPenTool::mouseReleaseEvent(const int x, const int y) /* override */
 {
     if (m_drawing) {
-        m_history.push(new mdpCairoHistoryEntry("Pen", m_cairoModel, m_previewSurface, m_previewContext));
+        //m_history.push(new mdpCairoHistoryEntry("Pen", m_cairoModel, m_previewSurface, m_previewContext));
         m_cairoModel.submit();
         m_drawing = false;
     }

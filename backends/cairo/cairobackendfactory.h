@@ -1,11 +1,9 @@
 #ifndef MDP_CAIROBACKENDFACTORY_H
 #define MDP_CAIROBACKENDFACTORY_H
 
-#include "api.h"
-
 #include <mdpaint/backendfactory.h>
 
-class MDP_CAIRO_API mdpCairoBackendFactory : public mdpBackendFactory
+class mdpCairoBackendFactory : public mdpBackendFactory
 {
 public:
 

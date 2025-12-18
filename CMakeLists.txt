@@ -100,6 +100,8 @@ if(MDPAINT_WITH_QT)
 endif()
 
 if(MDPAINT_WITH_CAIRO)
+    add_subdirectory(backends/cairo)
+    add_dependencies(mdpaint mdpaint::cairo)
     target_link_libraries(mdpaint
         PUBLIC
         PRIVATE

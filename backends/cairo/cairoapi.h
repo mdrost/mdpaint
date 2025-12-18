@@ -3,7 +3,7 @@
 
 #include <mdpaint/api.h>
 
-#ifdef MDP_CAIRO_BUILD_SHARED
+#ifdef MDP_CAIRO_BUILD_MODULE
 # ifdef MDP_CAIRO_EXPORTS
 #  define MDP_CAIRO_API MDP_INTERFACE_API_EXPORT
 # else

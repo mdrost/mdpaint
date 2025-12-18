@@ -6,8 +6,8 @@ find_package(Cairo)
 find_package(Boost REQUIRED)
 
 set(SOURCES
-    include/mdpaint/cairo/api.h
-    include/mdpaint/cairo/cairobackendfactory.h
+    cairoapi.h
+    cairobackendfactory.h
     cairobackendfactory.cpp
     cairoellipsetool.h
     cairoellipsetool.cpp
@@ -21,13 +21,15 @@ set(SOURCES
     cairomodel.cpp
     cairopentool.h
     cairopentool.cpp
+    cairoplugin.h
+    cairoplugin.cpp
     cairorectangletool.h
     cairorectangletool.cpp
     cairoresizescaleskewtool.h
     cairoresizescaleskewtool.cpp
 )
 
-add_library(mdpaint_cairo SHARED
+add_library(mdpaint_cairo MODULE
     ${SOURCES}
 )
 
@@ -35,14 +37,11 @@ target_compile_definitions(mdpaint_cairo
     PUBLIC
     PRIVATE
         MDP_CAIRO_EXPORTS
-        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_cairo,TYPE>,SHARED_LIBRARY>:MDP_CAIRO_BUILD_SHARED>
+        $<$<STREQUAL:$<TARGET_PROPERTY:mdpaint_cairo,TYPE>,MODULE_LIBRARY>:MDP_CAIRO_BUILD_MODULE>
 )
 
 target_include_directories(mdpaint_cairo
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/mdpaint/cairo
 )
 
 set_target_properties(mdpaint_cairo PROPERTIES
@@ -57,5 +56,9 @@ target_link_libraries(mdpaint_cairo
         mdpaint::private
         Boost::headers
 )
+add_custom_command(TARGET mdpaint_cairo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            $<TARGET_FILE:mdpaint_cairo>
+            "$<TARGET_FILE_DIR:mdpaint>/backends")
 
 add_library(mdpaint::cairo ALIAS mdpaint_cairo)

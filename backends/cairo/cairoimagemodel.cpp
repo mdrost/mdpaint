@@ -1,6 +1,6 @@
 #include "cairoimagemodel.h"
 
-#include <mdpaint/private/boostsignals2signalconnectionprivate.h>
+#include <mdpaint/private/privateboostsignals2signalconnection.h>
 
 // public
 mdpCairoImageModel::mdpCairoImageModel() :
@@ -24,8 +24,7 @@ mdpCairoImageModel::mdpCairoImageModel() :
     try {
         beginDrawing();
         refresh();
-        endDrawingInternal();
-        m_drawing = false;
+        endDrawing();
     }
     catch (...) {
         cairo_destroy(m_baseContext);
@@ -142,6 +141,7 @@ void mdpCairoImageModel::refresh() /* override */
 // public virtual
 void mdpCairoImageModel::submit() /* override */
 {
+    assert(!m_drawing);
     cairo_surface_t* const oldBaseSurface = m_baseSurface;
     cairo_t* const oldBaseContext = m_baseContext;
     m_baseSurface = m_previewSurface;
@@ -189,7 +189,7 @@ void mdpCairoImageModel::setPreview(cairo_surface_t* newPreviewSurface, cairo_t*
 // public virtual
 mdpSignalConnection mdpCairoImageModel::onPreviewReset(std::function<void ()> slot) /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_previewResetSignal.connect(slot))));
+    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_previewResetSignal.connect(slot))));
 }
 
 // public virtual
@@ -219,13 +219,13 @@ int mdpCairoImageModel::stride() const /* override */
 // public virtual
 mdpSignalConnection mdpCairoImageModel::onDataChanged(std::function<void ()> slot) /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_dataChangedSignal.connect(slot))));
+    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataChangedSignal.connect(slot))));
 }
 
 // public virtual
 mdpSignalConnection mdpCairoImageModel::onDataReset(std::function<void ()> slot) /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate>(new mdpBoostSignals2SignalConnectionPrivate(m_dataResetSignal.connect(slot))));
+    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataResetSignal.connect(slot))));
 }
 
 bool mdpCairoImageModel::endDrawingInternal()
@@ -234,10 +234,6 @@ bool mdpCairoImageModel::endDrawingInternal()
     unsigned char* data = cairo_image_surface_get_data(surface);
     if (data == nullptr) {
         throw std::runtime_error(cairo_status_to_string(CAIRO_STATUS_NULL_POINTER));
-    }
-    cairo_surface_flush(surface);
-    if (const cairo_status_t status = cairo_surface_status(surface); status != CAIRO_STATUS_SUCCESS) {
-        throw std::runtime_error(cairo_status_to_string(status));
     }
     const int newWidth = cairo_image_surface_get_width(surface);
     const int newHeight = cairo_image_surface_get_height(surface);

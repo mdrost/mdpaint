@@ -13,7 +13,7 @@ class mdpCairoResizeScaleSkewTool final : public mdpResizeScaleSkewTool
 {
 public:
 
-    explicit mdpCairoResizeScaleSkewTool(mdpCairoModel& cairoModel, std::function<mdpResizeScaleSkewData() > getResizeScaleSkewData, mdpHistory& history);
+    explicit mdpCairoResizeScaleSkewTool(mdpCairoModel& cairoModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history);
 
     ~mdpCairoResizeScaleSkewTool() override;
 
@@ -39,7 +39,7 @@ public:
 
 private:
     mdpCairoModel& m_cairoModel;
-    std::function<mdpResizeScaleSkewData() > m_getResizeScaleSkewData;
+    std::function<mdpResizeScaleSkewData ()> m_getResizeScaleSkewData;
     mdpHistory& m_history;
 };
 
