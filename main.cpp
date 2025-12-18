@@ -53,6 +53,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 #if defined(_WIN32)
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -71,8 +72,8 @@ int main(int argc, char* argv[])
         DWORD lastError = GetLastError();
         return EXIT_FAILURE;
     }
-    mdpCreatePluginFunction mdpCreatePlugin = reinterpret_cast<mdpCreatePluginFunction>(GetProcAddress(frontendPluginModule, "mdpCreatePlugin"));
-    if (mdpCreatePlugin == nullptr) {
+    mdpCreatePluginFunction mdpCreateFrontendPlugin = reinterpret_cast<mdpCreatePluginFunction>(GetProcAddress(frontendPluginModule, "mdpCreatePlugin"));
+    if (mdpCreateFrontendPlugin == nullptr) {
         DWORD lastError = GetLastError();
         return EXIT_FAILURE;
     }
@@ -80,24 +81,30 @@ int main(int argc, char* argv[])
     std::string frontendPluginPath = "frontends/libmdpaintqt.so";
     void* const frontendPlugin = dlopen(frontendPluginPath.c_str(), RTLD_NOW);
     if (frontendPlugin == nullptr) {
-        return EXIT_FAILURE;
+        throw std::runtime_error(dlerror());
     }
-    mdpCreatePluginFunction mdpCreatePlugin = reinterpret_cast<mdpCreatePluginFunction>(dlsym(frontendPlugin, "mdpCreatePlugin"));
-    if (mdpCreatePlugin == nullptr) {
-        return EXIT_FAILURE;
+    dlerror(); // clear any error
+    mdpCreatePluginFunction mdpCreateFrontendPlugin = reinterpret_cast<mdpCreatePluginFunction>(dlsym(frontendPlugin, "mdpCreatePlugin"));
+    const char* dlsymError = dlerror();
+    if (dlsymError != nullptr) {
+        throw std::runtime_error(dlsymError);
+    }
+    if (mdpCreateFrontendPlugin == nullptr) {
+        throw std::runtime_error("dlsym");
     }
 #endif
-    std::unique_ptr<mdpPlugin> plugin = mdpCreatePlugin(argc, argv);
-    if (plugin == nullptr) {
+    std::unique_ptr<mdpPlugin> frontendPlugin = mdpCreateFrontendPlugin(argc, argv);
+    if (frontendPlugin == nullptr) {
         return EXIT_FAILURE;
     }
-    std::unique_ptr<mdpFrontend> frontend = plugin->createFrontend();
+    std::unique_ptr<mdpFrontend> frontend = frontendPlugin->createFrontend();
     if (frontend == nullptr) {
         return EXIT_FAILURE;
     }
-    plugin->initialize();
+
+    frontendPlugin->initialize();
     int result = frontend->run();
-    plugin->terminate();
+    frontendPlugin->terminate();
 
     return result;
 }
