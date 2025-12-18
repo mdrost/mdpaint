@@ -93,6 +93,12 @@ target_link_libraries(mdpaint
         mdpaint::interface
         Qt${QT_VERSION_MAJOR}::Widgets
 )
+
+if(MDPAINT_WITH_QT)
+    add_subdirectory(frontends/qt)
+    add_dependencies(mdpaint mdpaint::qt)
+endif()
+
 if(MDPAINT_WITH_CAIRO)
     target_link_libraries(mdpaint
         PUBLIC
