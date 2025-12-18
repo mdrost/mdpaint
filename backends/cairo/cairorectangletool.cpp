@@ -135,6 +135,6 @@ void mdpCairoRectangleTool::draw(const int fromX, const int fromY, const int toX
 // private slot
 void mdpCairoRectangleTool::onCairoModelPreviewReset()
 {
-    m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();
+    m_previewSurface = m_cairoModel.getPreviewSurface();
 }

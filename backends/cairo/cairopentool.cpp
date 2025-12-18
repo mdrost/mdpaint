@@ -132,6 +132,6 @@ void mdpCairoPenTool::draw(const int fromX, const int fromY, const int toX, cons
 // private slot
 void mdpCairoPenTool::onCairoModelPreviewReset()
 {
-    m_previewSurface = m_cairoModel.getPreviewSurface();
     m_previewContext = m_cairoModel.getPreviewContext();
+    m_previewSurface = m_cairoModel.getPreviewSurface();
 }
