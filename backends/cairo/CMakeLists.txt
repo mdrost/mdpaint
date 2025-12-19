@@ -1,5 +1,9 @@
 if(POLICY CMP0167)
-  cmake_policy(SET CMP0167 NEW)
+    if(WIN32)
+        cmake_policy(SET CMP0167 OLD)
+    else()
+        cmake_policy(SET CMP0167 NEW)
+    endif()
 endif()
 
 find_package(Cairo)
@@ -27,6 +31,7 @@ set(SOURCES
     cairorectangletool.cpp
     cairoresizescaleskewtool.h
     cairoresizescaleskewtool.cpp
+    cairo.json.in
 )
 
 add_library(mdpaint_cairo MODULE
@@ -56,9 +61,24 @@ target_link_libraries(mdpaint_cairo
         mdpaint::private
         Boost::headers
 )
+
 add_custom_command(TARGET mdpaint_cairo POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE:mdpaint_cairo>
+            "$<TARGET_FILE:mdpaint_cairo>"
             "$<TARGET_FILE_DIR:mdpaint>/backends")
+
+# TODO: Make it more intelligent. Unfortunately generator expression don't seem to work.
+if(WIN32)
+    set(MDPAINT_CAIRO_JSON_PATH mdpaintcairo.dll)
+elseif(UNIX)
+    set(MDPAINT_CAIRO_JSON_PATH libmdpaintcairo.so)
+endif()
+
+configure_file(cairo.json.in cairo.json @ONLY)
+
+add_custom_command(TARGET mdpaint_cairo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/cairo.json"
+            "$<TARGET_FILE_DIR:mdpaint>/backends/mdpaintcairo.json")
 
 add_library(mdpaint::cairo ALIAS mdpaint_cairo)
