@@ -14,7 +14,7 @@ public:
     ~mdpQtFrontend() override;
 
     [[nodiscard]]
-    int run() override;
+    int run(const std::vector<const mdpBackendFactory*>& backendFactories) override;
 };
 
 #endif // MDP_QTFRONTEND_H

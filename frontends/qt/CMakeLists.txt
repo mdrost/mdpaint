@@ -11,6 +11,8 @@ set(QRC_FILES mdpaint.qrc)
 
 set(SOURCES
     qtapi.h
+    qtbackendfactory.h
+    qtbackendfactory.cpp
     qtcolorbox.h
     qtcolorbox.cpp
     qtfrontend.h
@@ -39,8 +41,6 @@ set(SOURCES
     qttoolaction.cpp
     qttoolbox.h
     qttoolbox.cpp
-    backend/qtbackendfactory.h
-    backend/qtbackendfactory.cpp
     backend/qtellipsetool.h
     backend/qtellipsetool.cpp
     backend/qthistoryentry.h
@@ -57,6 +57,7 @@ set(SOURCES
     backend/qtrectangletool.cpp
     backend/qtresizescaleskewtool.h
     backend/qtresizescaleskewtool.cpp
+    qt.json.in
     ${TS_FILES}
     ${QRC_FILES}
 )
@@ -104,8 +105,22 @@ target_link_libraries(mdpaint_qt
 
 add_custom_command(TARGET mdpaint_qt POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE:mdpaint_qt>
+            "$<TARGET_FILE:mdpaint_qt>"
             "$<TARGET_FILE_DIR:mdpaint>/frontends")
+
+# TODO: Make it more intelligent. Unfortunately generator expression don't seem to work.
+if(WIN32)
+    set(MDPAINT_QT_JSON_PATH mdpaintqt.dll)
+elseif(UNIX)
+    set(MDPAINT_QT_JSON_PATH libmdpaintqt.so)
+endif()
+
+configure_file(qt.json.in qt.json @ONLY)
+
+add_custom_command(TARGET mdpaint_qt POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/qt.json"
+            "$<TARGET_FILE_DIR:mdpaint>/frontends/mdpaintqt.json")
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_target(mdpaint_qt)

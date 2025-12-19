@@ -99,7 +99,7 @@ void mdpQtImageModel::refresh() /* override */
         if (newPreviewImage->isNull()) {
             throw std::runtime_error("QImage");
         }
-        std::shared_ptr<QPainter> newPreviewPainter = std::make_shared<QPainter>(newPreviewImage.get());
+        std::shared_ptr<QPainter> newPreviewPainter = std::make_shared<QPainter>();
         setPreview(std::move(newPreviewImage), std::move(newPreviewPainter));
     }
 #if 0
@@ -150,6 +150,7 @@ void mdpQtImageModel::setPreview(std::shared_ptr<QImage> newPreviewImage, std::s
     assert(m_drawing);
     m_previewPainter = newPreviewPainter;
     m_previewImage = newPreviewImage;
+    newPreviewPainter->begin(newPreviewImage.get());
     m_previewResetSignal();
 }
 

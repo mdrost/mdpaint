@@ -15,9 +15,9 @@ mdpQtFrontend::~mdpQtFrontend() /* override */
 }
 
 // public virtual
-int mdpQtFrontend::run() /* override */
+int mdpQtFrontend::run(const std::vector<const mdpBackendFactory*>& backendFactories) /* override */
 {
-    mdpQtMainWindow mainWindow;
+    mdpQtMainWindow mainWindow(backendFactories);
     mainWindow.setObjectName(QStringLiteral("mainWindow"));
     mainWindow.show();
     int result = qApp->exec();

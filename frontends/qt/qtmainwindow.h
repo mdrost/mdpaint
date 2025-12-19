@@ -11,9 +11,11 @@
 class mdpQtColorBox;
 class mdpQtHistoryView;
 class mdpQtImageContainer;
-class mdpImageModel;
 class mdpQtResizeScaleSkewToolWrapper;
 class mdpQtToolBox;
+
+class mdpBackendFactory;
+class mdpImageModel;
 
 class QActionGroup;
 class QGridLayout;
@@ -25,7 +27,7 @@ class mdpQtMainWindow final : public QMainWindow
 
 public:
 
-    explicit mdpQtMainWindow(QWidget* parent = nullptr);
+    explicit mdpQtMainWindow(const std::vector<const mdpBackendFactory*>& backendFactories, QWidget* parent = nullptr);
 
     ~mdpQtMainWindow() override;
 
@@ -56,6 +58,8 @@ private Q_SLOTS:
 private:
     Q_DISABLE_COPY(mdpQtMainWindow)
 
+    const std::vector<const mdpBackendFactory*>& m_backendFactories;
+    //
     mdpHistory m_history;
     QUndoStack* m_undoStack;
     std::unique_ptr<mdpImageModel> m_imageModel;

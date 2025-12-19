@@ -8,7 +8,6 @@
 #include <functional>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <stdexcept>
 
 // public
 mdpQtEllipseTool::mdpQtEllipseTool(mdpQtModel& qtModel, mdpHistory& history) :

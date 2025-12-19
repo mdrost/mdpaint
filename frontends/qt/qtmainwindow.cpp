@@ -7,7 +7,8 @@
 #include "qtresizescaleskewtoolwrapper.h"
 #include "qttoolaction.h"
 #include "qttoolbox.h"
-#include "backend/qtbackendfactory.h"
+
+#include <mdpaint/backendfactory.h>
 
 #include <QActionGroup>
 #include <QApplication>
@@ -20,22 +21,23 @@
 #include <functional>
 
 // public
-mdpQtMainWindow::mdpQtMainWindow(QWidget* parent) :
-    QMainWindow(parent)
+mdpQtMainWindow::mdpQtMainWindow(const std::vector<const mdpBackendFactory*>& backendFactories, QWidget* parent) :
+    QMainWindow(parent),
+    m_backendFactories(backendFactories)
 {
     setWindowTitle(tr("MD Paint"));
     setContextMenuPolicy(Qt::NoContextMenu);
     setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowNestedDocks);
 
-    mdpQtBackendFactory backendFactory;
+    const mdpBackendFactory* const backendFactory = backendFactories[0];
     m_undoStack = new QUndoStack(this);
-    m_imageModel = backendFactory.createImageModel();
+    m_imageModel = backendFactory->createImageModel();
 
-    m_penTool = backendFactory.createPenTool(*m_imageModel, m_history);
-    m_lineTool = backendFactory.createLineTool(*m_imageModel, m_history);
-    m_rectangleTool = backendFactory.createRectangleTool(*m_imageModel, m_history);
-    m_ellipseTool = backendFactory.createEllipseTool(*m_imageModel, m_history);
-    std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool = backendFactory.createResizeScaleSkewTool(*m_imageModel, std::bind(&mdpQtMainWindow::getResizeScaleSkewData, this), m_history);
+    m_penTool = backendFactory->createPenTool(*m_imageModel, m_history);
+    m_lineTool = backendFactory->createLineTool(*m_imageModel, m_history);
+    m_rectangleTool = backendFactory->createRectangleTool(*m_imageModel, m_history);
+    m_ellipseTool = backendFactory->createEllipseTool(*m_imageModel, m_history);
+    std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool = backendFactory->createResizeScaleSkewTool(*m_imageModel, std::bind(&mdpQtMainWindow::getResizeScaleSkewData, this), m_history);
     m_resizeScaleSkewTool = std::make_unique<mdpQtResizeScaleSkewToolWrapper>(std::move(resizeScaleSkewTool));
     connect(m_resizeScaleSkewTool.get(), &mdpQtResizeScaleSkewToolWrapper::activated, this, &mdpQtMainWindow::onResizeScaleSkewToolActivated);
     m_activeTool = nullptr;
@@ -272,13 +274,24 @@ mdpResizeScaleSkewData mdpQtMainWindow::getResizeScaleSkewData()
 void mdpQtMainWindow::onImageContainerResize(const QRect& newGeometry)
 {
     mdpResizeScaleSkewData resizeScaleSkewData = {
-        .x = newGeometry.x(),
-        .y = newGeometry.y(),
-        .width = newGeometry.width(),
-        .height = newGeometry.height(),
-        .scale = false,
-        .skewX = 0.0,
-        .skewY = 0.0
+        //.x = newGeometry.x(),
+        //.y = newGeometry.y(),
+        //.width = newGeometry.width(),
+        //.height = newGeometry.height(),
+        //.scale = false,
+        //.skewX = 0.0,
+        //.skewY = 0.0
+        .x = 32,
+        .y = 16,
+        .width = 192,
+        .height = 64,
+        .scale = true,
+        //.skewX = 0 * M_PI / 180.0,
+        //.skewY = 26.565 * M_PI / 180.0
+        .skewX = -45 * M_PI / 180.0,
+        .skewY = -0 * M_PI / 180.0
+        //.skewX = 0 * M_PI / 180.0,
+        //.skewY = 60 * M_PI / 180.0
     };
     m_resizeScaleSkewTool->resizeScaleSkew(resizeScaleSkewData);
 }

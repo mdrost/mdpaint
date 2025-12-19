@@ -45,7 +45,7 @@ std::unique_ptr<mdpFrontend> mdpQtPlugin::createFrontend() /* override */
 // public virtual
 std::unique_ptr<mdpBackendFactory> mdpQtPlugin::createBackendFactory() /* override */
 {
-    return nullptr;
+    return std::make_unique<mdpQtBackendFactory>();
 }
 
 std::unique_ptr<mdpPlugin> mdpCreatePlugin(int& argc, char** const argv)

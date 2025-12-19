@@ -5,8 +5,10 @@
 
 #include <mdpaint/history.h>
 
+#include <QPainter>
+#include <QPen>
+
 #include <functional>
-#include <stdexcept>
 
 // public
 mdpQtPenTool::mdpQtPenTool(mdpQtModel& qtModel, mdpHistory& history) :
@@ -92,11 +94,25 @@ void mdpQtPenTool::leaveEvent() /* override */
 // private
 void mdpQtPenTool::draw(const int x, const int y)
 {
+    QPainter* const painter = m_previewPainter.get();
+    QPen pen(Qt::black, 1);
+    painter->setPen(pen);
+    const double exactX = x + 0.5;
+    const double exactY = y + 0.5;
+    painter->drawPoint(QPointF(exactX, exactY));
 }
 
 // private
 void mdpQtPenTool::draw(const int fromX, const int fromY, const int toX, const int toY)
 {
+    QPainter* const painter = m_previewPainter.get();
+    QPen pen(Qt::black, 1);
+    painter->setPen(pen);
+    const double exactFromX = fromX + 0.5;
+    const double exactFromY = fromY + 0.5;
+    const double exactToX = toX + 0.5;
+    const double exactToY = toY + 0.5;
+    painter->drawLine(QLineF(exactFromX, exactFromY, exactToX, exactToY));
 }
 
 // private slot
