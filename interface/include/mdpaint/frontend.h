@@ -3,6 +3,10 @@
 
 #include "api.h"
 
+#include <vector>
+
+class mdpBackendFactory;
+
 class MDP_INTERFACE_API mdpFrontend
 {
 public:
@@ -12,7 +16,7 @@ public:
     virtual ~mdpFrontend();
 
     [[nodiscard]]
-    virtual int run() = 0;
+    virtual int run(const std::vector<const mdpBackendFactory*>& backendFactories) = 0;
 };
 
 #endif // MDP_INTERFACEFRONTEND_H

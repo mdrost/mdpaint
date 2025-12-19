@@ -18,22 +18,22 @@ public:
     virtual ~mdpBackendFactory();
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpImageModel> createImageModel() = 0;
+    virtual std::unique_ptr<mdpImageModel> createImageModel() const = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpTool> createPenTool(mdpImageModel& imageModel, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpTool> createPenTool(mdpImageModel& imageModel, mdpHistory& history) const = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpTool> createLineTool(mdpImageModel& imageModel, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpTool> createLineTool(mdpImageModel& imageModel, mdpHistory& history) const = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpTool> createRectangleTool(mdpImageModel& imageModel, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpTool> createRectangleTool(mdpImageModel& imageModel, mdpHistory& history) const = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpTool> createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpTool> createEllipseTool(mdpImageModel& imageModel, mdpHistory& history) const = 0;
 
     [[nodiscard]]
-    virtual std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) = 0;
+    virtual std::unique_ptr<mdpResizeScaleSkewTool> createResizeScaleSkewTool(mdpImageModel& imageModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history) const = 0;
 };
 
 #endif // MDP_INTERFACEBACKENDPLUGIN_H

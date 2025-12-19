@@ -4,10 +4,23 @@ project(mdpaint VERSION 0.1 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules")
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+
+if(POLICY CMP0167)
+    if(WIN32)
+        cmake_policy(SET CMP0167 OLD)
+    else()
+        cmake_policy(SET CMP0167 NEW)
+    endif()
+endif()
+
+if(WIN32)
+    set(Boost_USE_STATIC_LIBS ON)
+endif()
+find_package(Boost REQUIRED COMPONENTS json)
 
 add_subdirectory(private)
 
@@ -26,12 +39,12 @@ target_compile_definitions(mdpaint
         $<$<BOOL:${WIN32}>:UNICODE>
         $<$<BOOL:${WIN32}>:_UNICODE>
 )
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+
 target_link_libraries(mdpaint
     PRIVATE
         mdpaint::interface
-        Qt${QT_VERSION_MAJOR}::Widgets
+        Boost::headers
+        Boost::json
 )
 
 if(MDPAINT_WITH_QT)
