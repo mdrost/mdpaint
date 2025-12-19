@@ -289,7 +289,6 @@ int main(int argc, char* argv[])
                         backendPlugin->terminate();
                         throw;
                     }
-                    break;
                 }
                 catch (...) {
                     if (throw_to_exit) {

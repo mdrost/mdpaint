@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.24)
 
 project(mdpaint VERSION 0.1 LANGUAGES CXX)
 
+find_package(ECM NO_MODULE)
+list(APPEND CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules")
 
 set(CMAKE_CXX_STANDARD 23)
