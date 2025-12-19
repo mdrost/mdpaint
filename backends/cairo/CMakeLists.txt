@@ -74,11 +74,11 @@ elseif(UNIX)
     set(MDPAINT_CAIRO_JSON_PATH libmdpaintcairo.so)
 endif()
 
-configure_file(cairo.json.in cairo.json @ONLY)
+configure_file(cairo.json.in mdpaintcairo.json @ONLY)
 
 add_custom_command(TARGET mdpaint_cairo POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/cairo.json"
-            "$<TARGET_FILE_DIR:mdpaint>/backends/mdpaintcairo.json")
+            "${CMAKE_CURRENT_BINARY_DIR}/mdpaintcairo.json"
+            "$<TARGET_FILE_DIR:mdpaint>/backends/")
 
 add_library(mdpaint::cairo ALIAS mdpaint_cairo)
