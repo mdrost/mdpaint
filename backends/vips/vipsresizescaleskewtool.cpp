@@ -75,8 +75,8 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
     const  double tanSkewY = std::tan(skewY);
     double scaleX;
     double scaleY;
-    gdouble offsetX = -std::min(tanSkewY * height, 0.0);
-    gdouble offsetY = -std::min(tanSkewX * width, 0.0);
+    gdouble offsetX = -std::min(tanSkewX * height, 0.0);
+    gdouble offsetY = -std::min(tanSkewY * width, 0.0);
     if (resizeScaleSkewData.scale) {
         scaleX = width / (double)imageWidth;
         scaleY = height / (double)imageHeight;
@@ -87,15 +87,15 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
         scaleX = 1.0;
         scaleY = 1.0;
     }
-    const int newWidth = width + std::abs(tanSkewY) * height;
-    const int newHeight = height + std::abs(tanSkewX) * width;
-    VipsImage* newPreviewImage;
-    double xx = scaleX;
-    double xy = scaleY * tanSkewY;
-    double yx = scaleX * tanSkewX;
-    double yy = scaleY;
+    const int newWidth = width + std::abs(tanSkewX) * height;
+    const int newHeight = height + std::abs(tanSkewY) * width;
+    const double xx = scaleX;
+    const double xy = scaleY * tanSkewX;
+    const double yx = scaleX * tanSkewY;
+    const double yy = scaleY;
     const VipsArrayInt* const area = vips_array_int_newv(4, x, y, newWidth, newHeight);
-    const VipsArrayDouble* const background = vips_array_double_newv(4, 255.0, 255.0, 255.0, 255.0 );
+    const VipsArrayDouble* const background = vips_array_double_newv(4, 255.0, 255.0, 255.0, 255.0);
+    VipsImage* newPreviewImage;
     if (vips_affine(
             previewImage, &newPreviewImage,
             xx, xy,
@@ -104,6 +104,7 @@ void mdpVipsResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& r
             "odx", offsetX,
             "ody", offsetY,
             "background", background,
+            "interpolate", vips_interpolate_bilinear_static(),
             nullptr)) {
         vips_area_unref(VIPS_AREA(background));
         vips_area_unref(VIPS_AREA(area));

@@ -29,6 +29,7 @@ set(SOURCES
     vipsresizescaleskewtool.h
     vipsresizescaleskewtool.cpp
     vipssvgtemplates.h
+    vips.json.in
 )
 
 add_library(mdpaint_vips MODULE
@@ -62,7 +63,21 @@ target_link_libraries(mdpaint_vips
 
 add_custom_command(TARGET mdpaint_vips POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            $<TARGET_FILE:mdpaint_vips>
+            "$<TARGET_FILE:mdpaint_vips>"
             "$<TARGET_FILE_DIR:mdpaint>/backends")
+
+# TODO: Make it more intelligent. Unfortunately generator expression don't seem to work.
+if(WIN32)
+    set(MDPAINT_VIPS_JSON_PATH mdpaintvips.dll)
+elseif(UNIX)
+    set(MDPAINT_VIPS_JSON_PATH libmdpaintvips.so)
+endif()
+
+configure_file(vips.json.in vips.json @ONLY)
+
+add_custom_command(TARGET mdpaint_vips POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/vips.json"
+            "$<TARGET_FILE_DIR:mdpaint>/backends/mdpaintvips.json")
 
 add_library(mdpaint::vips ALIAS mdpaint_vips)
