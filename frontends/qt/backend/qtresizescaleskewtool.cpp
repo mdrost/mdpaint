@@ -78,8 +78,8 @@ void mdpQtResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& res
     const  double tanSkewY = std::tan(skewY);
     double scaleX;
     double scaleY;
-    double offsetX = -std::min(tanSkewY * height, 0.0);
-    double offsetY = -std::min(tanSkewX * width, 0.0);
+    //double offsetX = -std::min(tanSkewX * height, 0.0);
+    //double offsetY = -std::min(tanSkewY * width, 0.0);
     if (resizeScaleSkewData.scale) {
         scaleX = width / (double)imageWidth;
         scaleY = height / (double)imageHeight;
@@ -87,20 +87,16 @@ void mdpQtResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& res
     else {
         scaleX = 1.0;
         scaleY = 1.0;
-        offsetX -= x;
-        offsetY -= y;
+        //offsetX -= x;
+        //offsetY -= y;
     }
-    const int newWidth = width + std::abs(tanSkewY) * height;
-    const int newHeight = height + std::abs(tanSkewX) * width;
-    double xx = scaleX;
-    double xy = scaleX * tanSkewX;
-    double yx = scaleY * tanSkewY;
-    double yy = scaleY;
-    /*double xx = 1.0;
-    double xy = tanSkewY;
-    double yx = tanSkewX;
-    double yy = 1.0;*/
-    QTransform matrix(xx, xy, yx, yy, 0.0, 0.0);
+    //const int newWidth = width + std::abs(tanSkewX) * height;
+    //const int newHeight = height + std::abs(tanSkewY) * width;
+    const double xx = scaleX;
+    const double xy = scaleY * tanSkewX;
+    const double yx = scaleX * tanSkewY;
+    const double yy = scaleY;
+    const QTransform matrix(xx, yx, xy, yy, 0.0, 0.0);
     std::shared_ptr<QImage> newPreviewImage = std::make_shared<QImage>(previewImage->transformed(matrix));
     std::shared_ptr<QPainter> newPreviewPainter = std::make_shared<QPainter>();
     qDebug() << *newPreviewImage;
