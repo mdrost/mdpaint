@@ -73,11 +73,11 @@ elseif(UNIX)
     set(MDPAINT_VIPS_JSON_PATH libmdpaintvips.so)
 endif()
 
-configure_file(vips.json.in vips.json @ONLY)
+configure_file(vips.json.in mdpaintvips.json @ONLY)
 
 add_custom_command(TARGET mdpaint_vips POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/vips.json"
-            "$<TARGET_FILE_DIR:mdpaint>/backends/mdpaintvips.json")
+            "${CMAKE_CURRENT_BINARY_DIR}/mdpaintvips.json"
+            "$<TARGET_FILE_DIR:mdpaint>/backends/")
 
 add_library(mdpaint::vips ALIAS mdpaint_vips)
