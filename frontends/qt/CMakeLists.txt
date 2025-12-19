@@ -115,12 +115,12 @@ elseif(UNIX)
     set(MDPAINT_QT_JSON_PATH libmdpaintqt.so)
 endif()
 
-configure_file(qt.json.in qt.json @ONLY)
+configure_file(qt.json.in mdpaintqt.json @ONLY)
 
 add_custom_command(TARGET mdpaint_qt POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/qt.json"
-            "$<TARGET_FILE_DIR:mdpaint>/frontends/mdpaintqt.json")
+            "${CMAKE_CURRENT_BINARY_DIR}/mdpaintqt.json"
+            "$<TARGET_FILE_DIR:mdpaint>/frontends/")
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_target(mdpaint_qt)
