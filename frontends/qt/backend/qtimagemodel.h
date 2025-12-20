@@ -18,12 +18,16 @@ public:
 
     // mdpQtModel interface:
 
+    [[nodiscard]]
     std::shared_ptr<QImage> getBaseImage() override;
 
+    [[nodiscard]]
     std::shared_ptr<QPainter> getBasePainter() override;
 
+    [[nodiscard]]
     std::shared_ptr<QImage> getPreviewImage() override;
 
+    [[nodiscard]]
     std::shared_ptr<QPainter> getPreviewPainter() override;
 
     void beginDrawing() override;
@@ -36,20 +40,27 @@ public:
 
     void setPreview(std::shared_ptr<QImage> newPreviewImage, std::shared_ptr<QPainter> newPreviewPainter) override;
 
+    [[nodiscard]]
     mdpSignalConnection onPreviewReset(std::function<void ()> slot) override;
 
     // mdpImageModel interface:
 
+    [[nodiscard]]
     const unsigned char* data() const override;
 
+    [[nodiscard]]
     int width() const override;
 
+    [[nodiscard]]
     int height() const override;
 
+    [[nodiscard]]
     int stride() const override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataReset(std::function<void ()> slot) override;
 
 private:
