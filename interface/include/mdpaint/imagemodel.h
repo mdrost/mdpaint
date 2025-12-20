@@ -16,16 +16,22 @@ public:
     virtual ~mdpImageModel();
 
     // must be 32-bit aligned
+    [[nodiscard]]
     virtual const unsigned char* data() const = 0;
 
+    [[nodiscard]]
     virtual int width() const = 0;
 
+    [[nodiscard]]
     virtual int height() const = 0;
 
+    [[nodiscard]]
     virtual int stride() const = 0;
 
+    [[nodiscard]]
     virtual mdpSignalConnection onDataChanged(std::function<void ()> slot) = 0;
 
+    [[nodiscard]]
     virtual mdpSignalConnection onDataReset(std::function<void ()> slot) = 0;
 };
 
