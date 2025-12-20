@@ -20,8 +20,10 @@ public:
 
     // mdpVipsModel interface:
 
+    [[nodiscard]]
     VipsImage* getBaseImage() override;
 
+    [[nodiscard]]
     VipsImage* getPreviewImage() override;
 
     void beginDrawing() override;
@@ -38,16 +40,22 @@ public:
 
     // mdpImageModel interface:
 
+    [[nodiscard]]
     const unsigned char* data() const override;
 
+    [[nodiscard]]
     int width() const override;
 
+    [[nodiscard]]
     int height() const override;
 
+    [[nodiscard]]
     int stride() const override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataReset(std::function<void ()> slot) override;
 
 private:

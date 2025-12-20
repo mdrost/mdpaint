@@ -15,8 +15,10 @@ public:
 
     virtual ~mdpVipsModel();
 
+    [[nodiscard]]
     virtual VipsImage* getBaseImage() = 0;
 
+    [[nodiscard]]
     virtual VipsImage* getPreviewImage() = 0;
 
     virtual void beginDrawing() = 0;
@@ -29,6 +31,7 @@ public:
 
     virtual void setPreview(VipsImage* newPreviewImage) = 0;
 
+    [[nodiscard]]
     virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
 };
 
