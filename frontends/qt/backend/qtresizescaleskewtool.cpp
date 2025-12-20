@@ -7,7 +7,6 @@
 
 #include <QImage>
 #include <QPainter>
-#include <QDebug>
 
 #include <cmath>
 #include <functional>
@@ -90,16 +89,19 @@ void mdpQtResizeScaleSkewTool::resizeScaleSkew(const mdpResizeScaleSkewData& res
         //offsetX -= x;
         //offsetY -= y;
     }
-    //const int newWidth = width + std::abs(tanSkewX) * height;
-    //const int newHeight = height + std::abs(tanSkewY) * width;
+    const int newWidth = width + std::abs(tanSkewX) * height;
+    const int newHeight = height + std::abs(tanSkewY) * width;
     const double xx = scaleX;
     const double xy = scaleY * tanSkewX;
     const double yx = scaleX * tanSkewY;
     const double yy = scaleY;
     const QTransform matrix(xx, yx, xy, yy, 0.0, 0.0);
-    std::shared_ptr<QImage> newPreviewImage = std::make_shared<QImage>(previewImage->transformed(matrix));
-    std::shared_ptr<QPainter> newPreviewPainter = std::make_shared<QPainter>();
-    qDebug() << *newPreviewImage;
+    QImage newPreviewImageTmp = previewImage->transformed(matrix, Qt::SmoothTransformation);
+    std::shared_ptr<QImage> newPreviewImage = std::make_shared<QImage>(newWidth, newHeight, newPreviewImageTmp.format());
+    newPreviewImage->fill(Qt::white);
+    std::shared_ptr<QPainter> newPreviewPainter = std::make_shared<QPainter>(newPreviewImage.get());
+    newPreviewPainter->drawImage(QPointF(-x, -y), newPreviewImageTmp);
+    newPreviewPainter->end();
     m_qtModel.beginDrawing();
     m_qtModel.setPreview(newPreviewImage, newPreviewPainter);
     m_qtModel.endDrawing();
