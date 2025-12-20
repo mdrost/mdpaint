@@ -15,12 +15,16 @@ public:
 
     virtual ~mdpCairoModel();
 
+    [[nodiscard]]
     virtual cairo_surface_t* getBaseSurface() = 0;
 
+    [[nodiscard]]
     virtual cairo_t* getBaseContext() = 0;
 
+    [[nodiscard]]
     virtual cairo_surface_t* getPreviewSurface() = 0;
 
+    [[nodiscard]]
     virtual cairo_t* getPreviewContext() = 0;
 
     virtual void beginDrawing() = 0;
@@ -33,6 +37,7 @@ public:
 
     virtual void setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) = 0;
 
+    [[nodiscard]]
     virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
 };
 

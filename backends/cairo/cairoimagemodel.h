@@ -20,12 +20,16 @@ public:
 
     // mdpCairoModel interface:
 
+    [[nodiscard]]
     cairo_surface_t* getBaseSurface() override;
 
+    [[nodiscard]]
     cairo_t* getBaseContext() override;
 
+    [[nodiscard]]
     cairo_surface_t* getPreviewSurface() override;
 
+    [[nodiscard]]
     cairo_t* getPreviewContext() override;
 
     void beginDrawing() override;
@@ -38,20 +42,27 @@ public:
 
     void setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) override;
 
+    [[nodiscard]]
     mdpSignalConnection onPreviewReset(std::function<void ()> slot) override;
 
     // mdpImageModel interface:
 
+    [[nodiscard]]
     const unsigned char* data() const override;
 
+    [[nodiscard]]
     int width() const override;
 
+    [[nodiscard]]
     int height() const override;
 
+    [[nodiscard]]
     int stride() const override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
 
+    [[nodiscard]]
     mdpSignalConnection onDataReset(std::function<void ()> slot) override;
 
 private:
