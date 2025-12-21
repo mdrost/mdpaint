@@ -31,6 +31,8 @@ set(SOURCES
     cairorectangletool.cpp
     cairoresizescaleskewtool.h
     cairoresizescaleskewtool.cpp
+    cairosignalconnectionprivate.h
+    cairosignalconnectionprivate.cpp
     cairo.json.in
 )
 
@@ -58,7 +60,6 @@ target_link_libraries(mdpaint_cairo
         mdpaint::interface
     PRIVATE
         Cairo::Cairo
-        mdpaint::private
         Boost::headers
 )
 

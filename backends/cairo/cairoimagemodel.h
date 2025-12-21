@@ -14,7 +14,7 @@ class mdpCairoImageModel final : public mdpCairoModel, public mdpImageModel
 {
 public:
 
-    explicit mdpCairoImageModel();
+    explicit mdpCairoImageModel(cairo_surface_t* baseSurface, cairo_t* baseContext);
 
     ~mdpCairoImageModel() override;
 
@@ -43,7 +43,7 @@ public:
     void setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) override;
 
     [[nodiscard]]
-    mdpSignalConnection onPreviewReset(std::function<void ()> slot) override;
+    mdpSignalConnection onPreviewReset(std::function<void ()> slot) const override;
 
     // mdpImageModel interface:
 
@@ -60,10 +60,10 @@ public:
     int stride() const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
+    mdpSignalConnection onDataChanged(std::function<void ()> slot) const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataReset(std::function<void ()> slot) override;
+    mdpSignalConnection onDataReset(std::function<void ()> slot) const override;
 
 private:
 
@@ -74,14 +74,14 @@ private:
     cairo_t* m_baseContext;
     cairo_surface_t* m_previewSurface;
     cairo_t* m_previewContext;
-    boost::signals2::signal<void ()> m_previewResetSignal;
+    mutable boost::signals2::signal<void ()> m_previewResetSignal;
     unsigned char* m_data;
     int m_dataWidth;
     int m_dataHeight;
     int m_dataStride;
     bool m_drawing;
-    boost::signals2::signal<void ()> m_dataChangedSignal;
-    boost::signals2::signal<void ()> m_dataResetSignal;
+    mutable boost::signals2::signal<void ()> m_dataChangedSignal;
+    mutable boost::signals2::signal<void ()> m_dataResetSignal;
 };
 
 #endif // MDP_CAIROIMAGEMODEL_H

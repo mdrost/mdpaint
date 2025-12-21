@@ -38,7 +38,7 @@ public:
     virtual void setPreview(cairo_surface_t* newPreviewSurface, cairo_t* newPreviewContext) = 0;
 
     [[nodiscard]]
-    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
+    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) const = 0;
 };
 
 #endif // MDP_CAIROMODEL_H
