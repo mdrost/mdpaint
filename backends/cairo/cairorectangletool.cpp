@@ -82,6 +82,9 @@ void mdpCairoRectangleTool::enterEvent() /* override */
 // public virtual
 void mdpCairoRectangleTool::leaveEvent() /* override */
 {
+    if (m_drawing) {
+        return;
+    }
     m_cairoModel.beginDrawing();
     m_cairoModel.refresh();
     m_cairoModel.endDrawing();

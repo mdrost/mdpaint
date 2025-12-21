@@ -84,6 +84,9 @@ void mdpCairoEllipseTool::enterEvent() /* override */
 // public virtual
 void mdpCairoEllipseTool::leaveEvent() /* override */
 {
+    if (m_drawing) {
+        return;
+    }
     m_cairoModel.beginDrawing();
     m_cairoModel.refresh();
     m_cairoModel.endDrawing();
