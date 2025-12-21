@@ -2,7 +2,6 @@
 #define MDP_QTMAINWINDOW_H
 
 #include <mdpaint/history.h>
-#include <mdpaint/resizescaleskewtool.h>
 
 #include <QMainWindow>
 
@@ -12,10 +11,16 @@ class mdpQtColorBox;
 class mdpQtHistoryView;
 class mdpQtImageContainer;
 class mdpQtResizeScaleSkewToolWrapper;
+class mdpQtSelectionToolWrapper;
 class mdpQtToolBox;
+class mdpQtToolWrapper;
 
 class mdpBackendFactory;
 class mdpImageModel;
+class mdpResizeScaleSkewData;
+class mdpResizeScaleSkewTool;
+class mdpSelectionTool;
+class mdpTool;
 
 class QActionGroup;
 class QGridLayout;
@@ -53,7 +58,17 @@ private Q_SLOTS:
 
     void onToolActionTriggered(QAction* action);
 
-    void onResizeScaleSkewToolActivated();
+    void onSelectionToolPostActivate(mdpSelectionTool* selectionTool);
+
+    void onSelectionToolPreDeactivate(mdpSelectionTool* selectionTool);
+
+    void onToolPostActivate(mdpTool* tool);
+
+    void onToolPreDeactivate(mdpTool* tool);
+
+    void onResizeScaleSkewToolPostActivate(mdpResizeScaleSkewTool* resizeScaleSkewTool);
+
+    void onResizeScaleSkewToolPreDeactivate(mdpResizeScaleSkewTool* resizeScaleSkewTool);
 
 private:
     Q_DISABLE_COPY(mdpQtMainWindow)
@@ -64,10 +79,13 @@ private:
     QUndoStack* m_undoStack;
     std::unique_ptr<mdpImageModel> m_imageModel;
     //
-    std::unique_ptr<mdpTool> m_penTool;
-    std::unique_ptr<mdpTool> m_lineTool;
-    std::unique_ptr<mdpTool> m_rectangleTool;
-    std::unique_ptr<mdpTool> m_ellipseTool;
+    std::unique_ptr<mdpQtSelectionToolWrapper> m_freeFormSelectionTool;
+    std::unique_ptr<mdpQtSelectionToolWrapper> m_rectangularSelectionTool;
+    std::unique_ptr<mdpQtSelectionToolWrapper> m_ellipticalSelectionTool;
+    std::unique_ptr<mdpQtToolWrapper> m_penTool;
+    std::unique_ptr<mdpQtToolWrapper> m_lineTool;
+    std::unique_ptr<mdpQtToolWrapper> m_rectangleTool;
+    std::unique_ptr<mdpQtToolWrapper> m_ellipseTool;
     std::unique_ptr<mdpQtResizeScaleSkewToolWrapper> m_resizeScaleSkewTool;
     mdpTool* m_activeTool;
     //

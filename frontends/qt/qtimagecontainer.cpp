@@ -1,11 +1,15 @@
 #include "qtimagecontainer.h"
 
 #include "qtimageview.h"
+#include "qtselectionoverlay.h"
 #include "qtsizegrip.h"
 #include "qtsizeoverlay.h"
 
+#include <mdpaint/selectiontool.h>
+
 #include <QGridLayout>
 #include <QSpacerItem>
+#include <QStackedLayout>
 
 // public
 mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* parent) :
@@ -17,16 +21,26 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
     widget->setObjectName(QStringLiteral("widget"));
     setWidget(widget);
 
-    m_gridLayout = new QGridLayout(widget);
-    m_gridLayout->setObjectName(QStringLiteral("gridLayout"));
-    m_gridLayout->setSpacing(0);
-    m_gridLayout->setContentsMargins(0, 0, 0, 0);
+    QGridLayout* gridLayout = new QGridLayout(widget);
+    gridLayout->setObjectName(QStringLiteral("gridLayout"));
+    gridLayout->setSpacing(0);
+    gridLayout->setContentsMargins(0, 0, 0, 0);
 
     m_imageView = new mdpQtImageView(imageModel, widget);
-    m_imageView->setObjectName(QStringLiteral("image"));
-    m_gridLayout->addWidget(m_imageView, 2, 2, Qt::AlignCenter);
+    m_imageView->setObjectName(QStringLiteral("imageView"));
+
+    m_selectionOverlay = new mdpQtSelectionOverlay(widget);
+    m_selectionOverlay->setObjectName(QStringLiteral("selectionOverlay"));
+
+    QStackedLayout* imageViewLayout = new QStackedLayout();
+    imageViewLayout->setObjectName(QStringLiteral("imageViewLayout"));
+    imageViewLayout->setStackingMode(QStackedLayout::StackAll);
+    imageViewLayout->addWidget(m_selectionOverlay);
+    imageViewLayout->addWidget(m_imageView);
+    gridLayout->addLayout(imageViewLayout, 2, 2, Qt::AlignCenter);
 
     m_sizeOverlay = new mdpQtSizeOverlay(widget);
+    m_sizeOverlay->setObjectName(QStringLiteral("sizeOverlay"));
     m_sizeOverlay->setVisible(false);
 
     m_topLeftSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::TopLeft, m_sizeOverlay, widget);
@@ -35,7 +49,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_topLeftSizeGrip->setCursor(QCursor(Qt::SizeFDiagCursor));
 #endif
-    m_gridLayout->addWidget(m_topLeftSizeGrip, 1, 1, Qt::AlignRight | Qt::AlignBottom);
+    gridLayout->addWidget(m_topLeftSizeGrip, 1, 1, Qt::AlignRight | Qt::AlignBottom);
 
     m_bottomRightSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::BottomRight, m_sizeOverlay, widget);
     m_bottomRightSizeGrip->setObjectName(QStringLiteral("bottomRightSizeGrip"));
@@ -43,7 +57,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_bottomRightSizeGrip->setCursor(QCursor(Qt::SizeFDiagCursor));
 #endif
-    m_gridLayout->addWidget(m_bottomRightSizeGrip, 3, 3, Qt::AlignLeft | Qt::AlignTop);
+    gridLayout->addWidget(m_bottomRightSizeGrip, 3, 3, Qt::AlignLeft | Qt::AlignTop);
 
     m_topSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::Top, m_sizeOverlay, widget);
     m_topSizeGrip->setObjectName(QStringLiteral("topSizeGrip"));
@@ -51,7 +65,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_topSizeGrip->setCursor(QCursor(Qt::SizeVerCursor));
 #endif
-    m_gridLayout->addWidget(m_topSizeGrip, 1, 2, Qt::AlignHCenter | Qt::AlignBottom);
+    gridLayout->addWidget(m_topSizeGrip, 1, 2, Qt::AlignHCenter | Qt::AlignBottom);
 
     m_bottomSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::Bottom, m_sizeOverlay, widget);
     m_bottomSizeGrip->setObjectName(QStringLiteral("bottomSizeGrip"));
@@ -59,7 +73,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_bottomSizeGrip->setCursor(QCursor(Qt::SizeVerCursor));
 #endif
-    m_gridLayout->addWidget(m_bottomSizeGrip, 3, 2, Qt::AlignHCenter | Qt::AlignTop);
+    gridLayout->addWidget(m_bottomSizeGrip, 3, 2, Qt::AlignHCenter | Qt::AlignTop);
 
     m_topRightSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::TopRight, m_sizeOverlay, widget);
     m_topRightSizeGrip->setObjectName(QStringLiteral("topRightSizeGrip"));
@@ -67,7 +81,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_topRightSizeGrip->setCursor(QCursor(Qt::SizeBDiagCursor));
 #endif
-    m_gridLayout->addWidget(m_topRightSizeGrip, 1, 3, Qt::AlignLeft | Qt::AlignBottom);
+    gridLayout->addWidget(m_topRightSizeGrip, 1, 3, Qt::AlignLeft | Qt::AlignBottom);
 
     m_bottomLeftSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::BottomLeft, m_sizeOverlay, widget);
     m_bottomLeftSizeGrip->setObjectName(QStringLiteral("bottomLeftSizeGrip"));
@@ -75,7 +89,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_bottomLeftSizeGrip->setCursor(QCursor(Qt::SizeBDiagCursor));
 #endif
-    m_gridLayout->addWidget(m_bottomLeftSizeGrip, 3, 1, Qt::AlignRight | Qt::AlignTop);
+    gridLayout->addWidget(m_bottomLeftSizeGrip, 3, 1, Qt::AlignRight | Qt::AlignTop);
 
     m_leftSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::Left, m_sizeOverlay, widget);
     m_leftSizeGrip->setObjectName(QStringLiteral("leftSizeGrip"));
@@ -83,7 +97,7 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_leftSizeGrip->setCursor(QCursor(Qt::SizeHorCursor));
 #endif
-    m_gridLayout->addWidget(m_leftSizeGrip, 2, 1, Qt::AlignRight | Qt::AlignVCenter);
+    gridLayout->addWidget(m_leftSizeGrip, 2, 1, Qt::AlignRight | Qt::AlignVCenter);
 
     m_rightSizeGrip = new mdpQtSizeGrip(mdpQtSizeGrip::Right, m_sizeOverlay, widget);
     m_rightSizeGrip->setObjectName(QStringLiteral("rightSizeGrip"));
@@ -91,18 +105,17 @@ mdpQtImageContainer::mdpQtImageContainer(mdpImageModel& imageModel, QWidget* par
 #ifndef QT_NO_CURSOR
     m_rightSizeGrip->setCursor(QCursor(Qt::SizeHorCursor));
 #endif
-    m_gridLayout->addWidget(m_rightSizeGrip, 2, 3, Qt::AlignLeft | Qt::AlignVCenter);
+    gridLayout->addWidget(m_rightSizeGrip, 2, 3, Qt::AlignLeft | Qt::AlignVCenter);
 
-    m_spacer0 = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    m_gridLayout->addItem(m_spacer0, 0, 2);
-    m_spacer1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_gridLayout->addItem(m_spacer1, 2, 0);
-    m_spacer2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_gridLayout->addItem(m_spacer2, 2, 4);
-    m_spacer3 = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    m_gridLayout->addItem(m_spacer3, 4, 2);
+    QSpacerItem* topSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    gridLayout->addItem(topSpacer, 0, 2);
+    QSpacerItem* leftSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    gridLayout->addItem(leftSpacer, 2, 0);
+    QSpacerItem* rightSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    gridLayout->addItem(rightSpacer, 2, 4);
+    QSpacerItem* bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    gridLayout->addItem(bottomSpacer, 4, 2);
 
-    // TODO: maybe instead of passing SizeGrip we should use QObject::sender()?
     connect(m_topLeftSizeGrip, &mdpQtSizeGrip::resizeAboutToStart, this, [=, this]() {
         onResizeAboutToStart(m_topLeftSizeGrip);
     });
@@ -144,12 +157,6 @@ mdpQtImageContainer::~mdpQtImageContainer() /* override */
 }
 
 // public
-const mdpTool* mdpQtImageContainer::tool() const
-{
-    return m_imageView->tool();
-}
-
-// public
 void mdpQtImageContainer::setTool(mdpTool* tool)
 {
     m_imageView->setTool(tool);
@@ -158,6 +165,20 @@ void mdpQtImageContainer::setTool(mdpTool* tool)
 // public
 void mdpQtImageContainer::clearTool()
 {
+    m_imageView->clearTool();
+}
+
+// public
+void mdpQtImageContainer::setSelectionTool(mdpSelectionTool* selectionTool)
+{
+    m_imageView->setTool(selectionTool);
+    m_selectionOverlay->setSelectionTool(selectionTool);
+}
+
+// public
+void mdpQtImageContainer::clearSelectionTool()
+{
+    m_selectionOverlay->clearSelectionTool();
     m_imageView->clearTool();
 }
 

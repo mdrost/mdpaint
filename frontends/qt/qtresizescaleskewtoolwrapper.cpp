@@ -15,12 +15,13 @@ mdpQtResizeScaleSkewToolWrapper::~mdpQtResizeScaleSkewToolWrapper() /* override 
 void mdpQtResizeScaleSkewToolWrapper::activate() /* override */
 {
     m_resizeScaleSkewTool->activate();
-    Q_EMIT activated();
+    Q_EMIT postActivate();
 }
 
 // public virtual
 void mdpQtResizeScaleSkewToolWrapper::deactivate() /* override */
 {
+    Q_EMIT preDeactivate();
     m_resizeScaleSkewTool->deactivate();
 }
 

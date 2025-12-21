@@ -3,14 +3,14 @@
 
 #include <QScrollArea>
 
-class mdpImageModel;
 class mdpQtImageView;
+class mdpQtSelectionOverlay;
 class mdpQtSizeGrip;
 class mdpQtSizeOverlay;
-class mdpTool;
 
-class QGridLayout;
-class QSpacerItem;
+class mdpImageModel;
+class mdpSelectionTool;
+class mdpTool;
 
 class mdpQtImageContainer final : public QScrollArea
 {
@@ -22,11 +22,13 @@ public:
 
     ~mdpQtImageContainer();
 
-    const mdpTool* tool() const;
-
     void setTool(mdpTool* tool);
 
     void clearTool();
+
+    void setSelectionTool(mdpSelectionTool* selectionTool);
+
+    void clearSelectionTool();
 
 Q_SIGNALS:
 
@@ -41,8 +43,8 @@ private Q_SLOTS:
 private:
     Q_DISABLE_COPY(mdpQtImageContainer)
 
-    QGridLayout* m_gridLayout;
     mdpQtImageView* m_imageView;
+    mdpQtSelectionOverlay* m_selectionOverlay;
     mdpQtSizeOverlay* m_sizeOverlay;
     mdpQtSizeGrip* m_topLeftSizeGrip;
     mdpQtSizeGrip* m_bottomRightSizeGrip;
@@ -52,10 +54,6 @@ private:
     mdpQtSizeGrip* m_bottomLeftSizeGrip;
     mdpQtSizeGrip* m_leftSizeGrip;
     mdpQtSizeGrip* m_rightSizeGrip;
-    QSpacerItem* m_spacer0;
-    QSpacerItem* m_spacer1;
-    QSpacerItem* m_spacer2;
-    QSpacerItem* m_spacer3;
 };
 
 #endif // MDP_QTIMAGECONTAINER_H

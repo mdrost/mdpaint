@@ -3,14 +3,18 @@
 
 #include <mdpaint/resizescaleskewtool.h>
 
+#include <QObject>
+
 #include <functional>
 
 class mdpQtModel;
 
 class mdpHistory;
 
-class mdpQtResizeScaleSkewTool final : public mdpResizeScaleSkewTool
+class mdpQtResizeScaleSkewTool final : public QObject, public mdpResizeScaleSkewTool
 {
+    Q_OBJECT
+
 public:
 
     explicit mdpQtResizeScaleSkewTool(mdpQtModel& qtModel, std::function<mdpResizeScaleSkewData ()> getResizeScaleSkewData, mdpHistory& history);
@@ -38,6 +42,8 @@ public:
     void resizeScaleSkew(const mdpResizeScaleSkewData& resizeScaleSkewData) override;
 
 private:
+    Q_DISABLE_COPY(mdpQtResizeScaleSkewTool)
+
     mdpQtModel& m_qtModel;
     std::function<mdpResizeScaleSkewData ()> m_getResizeScaleSkewData;
     mdpHistory& m_history;

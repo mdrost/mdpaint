@@ -4,15 +4,16 @@
 #include "qtmodel.h"
 
 #include <mdpaint/imagemodel.h>
-#include <mdpaint/signalconnection.h>
 
-#include <boost/signals2/signal.hpp>
+#include <QObject>
 
-class mdpQtImageModel final : public mdpQtModel, public mdpImageModel
+class mdpQtImageModel final : public QObject, public mdpQtModel, public mdpImageModel
 {
+    Q_OBJECT
+
 public:
 
-    explicit mdpQtImageModel();
+    explicit mdpQtImageModel(std::unique_ptr<QImage> baseImage, std::unique_ptr<QPainter> basePainter);
 
     ~mdpQtImageModel() override;
 
@@ -41,7 +42,7 @@ public:
     void setPreview(std::shared_ptr<QImage> newPreviewImage, std::shared_ptr<QPainter> newPreviewPainter) override;
 
     [[nodiscard]]
-    mdpSignalConnection onPreviewReset(std::function<void ()> slot) override;
+    mdpSignalConnection onPreviewReset(std::function<void ()> slot) const override;
 
     // mdpImageModel interface:
 
@@ -58,28 +59,29 @@ public:
     int stride() const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
+    mdpSignalConnection onDataChanged(std::function<void ()> slot) const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataReset(std::function<void ()> slot) override;
+    mdpSignalConnection onDataReset(std::function<void ()> slot) const override;
 
-private:
+Q_SIGNALS:
 
-    bool endDrawingInternal();
+    void previewReset();
+
+    void dataChanged();
+
+    void dataReset();
 
 private:
     std::shared_ptr<QImage> m_baseImage;
     std::shared_ptr<QPainter> m_basePainter;
     std::shared_ptr<QImage> m_previewImage;
     std::shared_ptr<QPainter> m_previewPainter;
-    boost::signals2::signal<void ()> m_previewResetSignal;
     unsigned char* m_data;
     int m_dataWidth;
     int m_dataHeight;
     int m_dataStride;
     bool m_drawing;
-    boost::signals2::signal<void ()> m_dataChangedSignal;
-    boost::signals2::signal<void ()> m_dataResetSignal;
 };
 
 #endif // MDP_QTIMAGEMODEL_H

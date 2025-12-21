@@ -21,8 +21,12 @@ set(SOURCES
     qthistoryview.cpp
     qtimagecontainer.h
     qtimagecontainer.cpp
+    qtimagereader.h
+    qtimagereader.cpp
     qtimageview.h
     qtimageview.cpp
+    qtimagewriter.h
+    qtimagewriter.cpp
     qtmainwindow.h
     qtmainwindow.cpp
     qtplugin.h
@@ -31,6 +35,12 @@ set(SOURCES
     qtresizescaleskewdialog.cpp
     qtresizescaleskewtoolwrapper.h
     qtresizescaleskewtoolwrapper.cpp
+    qtselectionoverlay.h
+    qtselectionoverlay.cpp
+    qtselectiontoolwrapper.h
+    qtselectiontoolwrapper.cpp
+    qtsignalconnectionprivate.h
+    qtsignalconnectionprivate.cpp
     qtsizegrip.h
     qtsizegrip.cpp
     qtsizeoverlay.h
@@ -41,6 +51,8 @@ set(SOURCES
     qttoolaction.cpp
     qttoolbox.h
     qttoolbox.cpp
+    qttoolwrapper.h
+    qttoolwrapper.cpp
     backend/qtellipsetool.h
     backend/qtellipsetool.cpp
     backend/qthistoryentry.h
@@ -55,6 +67,8 @@ set(SOURCES
     backend/qtpentool.cpp
     backend/qtrectangletool.h
     backend/qtrectangletool.cpp
+    backend/qtrectangularselectiontool.h
+    backend/qtrectangularselectiontool.cpp
     backend/qtresizescaleskewtool.h
     backend/qtresizescaleskewtool.cpp
     qt.json.in
@@ -99,7 +113,6 @@ set_target_properties(mdpaint_qt PROPERTIES
 target_link_libraries(mdpaint_qt
     PRIVATE
         mdpaint::interface
-        mdpaint::private
         Qt${QT_VERSION_MAJOR}::Widgets
 )
 

@@ -4,6 +4,8 @@
 #include <mdpaint/signalconnection.h>
 #include <mdpaint/tool.h>
 
+#include <QObject>
+
 #include <memory>
 
 class mdpQtModel;
@@ -13,7 +15,7 @@ class mdpHistory;
 class QImage;
 class QPainter;
 
-class mdpQtPenTool final : public mdpTool
+class mdpQtPenTool final : public QObject, public mdpTool
 {
 public:
 
@@ -46,6 +48,8 @@ private:
     void onQtModelPreviewReset();
 
 private:
+    Q_DISABLE_COPY(mdpQtPenTool)
+
     mdpQtModel& m_qtModel;
     mdpHistory& m_history;
     std::shared_ptr<QImage> m_previewImage;

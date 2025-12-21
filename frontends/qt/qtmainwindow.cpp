@@ -5,10 +5,16 @@
 #include "qtimagecontainer.h"
 #include "qtresizescaleskewdialog.h"
 #include "qtresizescaleskewtoolwrapper.h"
+#include "qtselectiontoolwrapper.h"
 #include "qttoolaction.h"
 #include "qttoolbox.h"
+#include "qttoolwrapper.h"
 
 #include <mdpaint/backendfactory.h>
+#include <mdpaint/imagemodel.h>
+#include <mdpaint/resizescaleskewtool.h>
+#include <mdpaint/selectiontool.h>
+#include <mdpaint/tool.h>
 
 #include <QActionGroup>
 #include <QApplication>
@@ -31,15 +37,48 @@ mdpQtMainWindow::mdpQtMainWindow(const std::vector<const mdpBackendFactory*>& ba
 
     const mdpBackendFactory* const backendFactory = backendFactories[0];
     m_undoStack = new QUndoStack(this);
-    m_imageModel = backendFactory->createImageModel();
+    m_imageModel = backendFactory->createImageModel(400, 300);
 
-    m_penTool = backendFactory->createPenTool(*m_imageModel, m_history);
-    m_lineTool = backendFactory->createLineTool(*m_imageModel, m_history);
-    m_rectangleTool = backendFactory->createRectangleTool(*m_imageModel, m_history);
-    m_ellipseTool = backendFactory->createEllipseTool(*m_imageModel, m_history);
+    std::unique_ptr<mdpSelectionTool> freeFormSelectionTool = backendFactory->createFreeFormSelectionTool(*m_imageModel, m_history);
+    m_freeFormSelectionTool = std::make_unique<mdpQtSelectionToolWrapper>(std::move(freeFormSelectionTool));
+    connect(m_freeFormSelectionTool.get(), &mdpQtSelectionToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPostActivate, this, m_freeFormSelectionTool.get()));
+    connect(m_freeFormSelectionTool.get(), &mdpQtSelectionToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPreDeactivate, this, m_freeFormSelectionTool.get()));
+
+    std::unique_ptr<mdpSelectionTool> rectangularSelectionTool = backendFactory->createRectangularSelectionTool(*m_imageModel, m_history);
+    m_rectangularSelectionTool = std::make_unique<mdpQtSelectionToolWrapper>(std::move(rectangularSelectionTool));
+    connect(m_rectangularSelectionTool.get(), &mdpQtSelectionToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPostActivate, this, m_rectangularSelectionTool.get()));
+    connect(m_rectangularSelectionTool.get(), &mdpQtSelectionToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPreDeactivate, this, m_rectangularSelectionTool.get()));
+
+    std::unique_ptr<mdpSelectionTool> ellipticalSelectionTool = backendFactory->createEllipticalSelectionTool(*m_imageModel, m_history);
+    m_ellipticalSelectionTool = std::make_unique<mdpQtSelectionToolWrapper>(std::move(ellipticalSelectionTool));
+    connect(m_ellipticalSelectionTool.get(), &mdpQtSelectionToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPostActivate, this, m_ellipticalSelectionTool.get()));
+    connect(m_ellipticalSelectionTool.get(), &mdpQtSelectionToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onSelectionToolPreDeactivate, this, m_ellipticalSelectionTool.get()));
+
+    std::unique_ptr<mdpTool> penTool = backendFactory->createPenTool(*m_imageModel, m_history);
+    m_penTool = std::make_unique<mdpQtToolWrapper>(std::move(penTool));
+    connect(m_penTool.get(), &mdpQtToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onToolPostActivate, this, m_penTool.get()));
+    connect(m_penTool.get(), &mdpQtToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onToolPreDeactivate, this, m_penTool.get()));
+
+    std::unique_ptr<mdpTool> lineTool = backendFactory->createLineTool(*m_imageModel, m_history);
+    m_lineTool = std::make_unique<mdpQtToolWrapper>(std::move(lineTool));
+    connect(m_lineTool.get(), &mdpQtToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onToolPostActivate, this, m_lineTool.get()));
+    connect(m_lineTool.get(), &mdpQtToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onToolPreDeactivate, this, m_lineTool.get()));
+
+    std::unique_ptr<mdpTool> rectangleTool = backendFactory->createRectangleTool(*m_imageModel, m_history);
+    m_rectangleTool = std::make_unique<mdpQtToolWrapper>(std::move(rectangleTool));
+    connect(m_rectangleTool.get(), &mdpQtToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onToolPostActivate, this, m_rectangleTool.get()));
+    connect(m_rectangleTool.get(), &mdpQtToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onToolPreDeactivate, this, m_rectangleTool.get()));
+
+    std::unique_ptr<mdpTool> ellipseTool = backendFactory->createEllipseTool(*m_imageModel, m_history);
+    m_ellipseTool = std::make_unique<mdpQtToolWrapper>(std::move(ellipseTool));
+    connect(m_ellipseTool.get(), &mdpQtToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onToolPostActivate, this, m_ellipseTool.get()));
+    connect(m_ellipseTool.get(), &mdpQtToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onToolPreDeactivate, this, m_ellipseTool.get()));
+
     std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool = backendFactory->createResizeScaleSkewTool(*m_imageModel, std::bind(&mdpQtMainWindow::getResizeScaleSkewData, this), m_history);
     m_resizeScaleSkewTool = std::make_unique<mdpQtResizeScaleSkewToolWrapper>(std::move(resizeScaleSkewTool));
-    connect(m_resizeScaleSkewTool.get(), &mdpQtResizeScaleSkewToolWrapper::activated, this, &mdpQtMainWindow::onResizeScaleSkewToolActivated);
+    connect(m_resizeScaleSkewTool.get(), &mdpQtResizeScaleSkewToolWrapper::postActivate, this, std::bind(&mdpQtMainWindow::onResizeScaleSkewToolPostActivate, this, m_resizeScaleSkewTool.get()));
+    connect(m_resizeScaleSkewTool.get(), &mdpQtResizeScaleSkewToolWrapper::preDeactivate, this, std::bind(&mdpQtMainWindow::onResizeScaleSkewToolPreDeactivate, this, m_resizeScaleSkewTool.get()));
+
     m_activeTool = nullptr;
 
     QMenuBar* menubar = menuBar(); // create menu bar
@@ -177,6 +216,33 @@ mdpQtMainWindow::mdpQtMainWindow(const std::vector<const mdpBackendFactory*>& ba
     m_toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
     connect(m_toolActionGroup, &QActionGroup::triggered, this, &mdpQtMainWindow::onToolActionTriggered);
 
+    mdpQtToolAction* freeFormSelectionToolAction = new mdpQtToolAction(tr("Free-Form Selection"), this);
+    freeFormSelectionToolAction->setObjectName(QStringLiteral("freeFormSelectionToolAction"));
+    freeFormSelectionToolAction->setTool(m_freeFormSelectionTool.get());
+    freeFormSelectionToolAction->setCheckable(true);
+    freeFormSelectionToolAction->setIcon(QIcon(QStringLiteral(":/icons/tool-freeformselection.png")));
+    freeFormSelectionToolAction->setStatusTip(tr("Select a free-form region."));
+    m_toolBox->setFreeFormSelectionToolAction(freeFormSelectionToolAction);
+    m_toolActionGroup->addAction(freeFormSelectionToolAction);
+
+    mdpQtToolAction* rectangularSelectionToolAction = new mdpQtToolAction(tr("Rectangular Selection"), this);
+    rectangularSelectionToolAction->setObjectName(QStringLiteral("rectangularSelectionToolAction"));
+    rectangularSelectionToolAction->setTool(m_rectangularSelectionTool.get());
+    rectangularSelectionToolAction->setCheckable(true);
+    rectangularSelectionToolAction->setIcon(QIcon(QStringLiteral(":/icons/tool-rectangularselection.png")));
+    rectangularSelectionToolAction->setStatusTip(tr("Select a rectangle region."));
+    m_toolBox->setRectangularSelectionToolAction(rectangularSelectionToolAction);
+    m_toolActionGroup->addAction(rectangularSelectionToolAction);
+
+    mdpQtToolAction* ellipticalSelectionToolAction = new mdpQtToolAction(tr("Elliptical Selection"), this);
+    ellipticalSelectionToolAction->setObjectName(QStringLiteral("ellipticalSelectionToolAction"));
+    ellipticalSelectionToolAction->setTool(m_ellipticalSelectionTool.get());
+    ellipticalSelectionToolAction->setCheckable(true);
+    ellipticalSelectionToolAction->setIcon(QIcon(QStringLiteral(":/icons/tool-ellipticalselection.png")));
+    ellipticalSelectionToolAction->setStatusTip(tr("Select an elliptical region."));
+    m_toolBox->setEllipticalSelectionToolAction(ellipticalSelectionToolAction);
+    m_toolActionGroup->addAction(ellipticalSelectionToolAction);
+
     mdpQtToolAction* penToolAction = new mdpQtToolAction(tr("Pen"), this);
     penToolAction->setObjectName(QStringLiteral("penToolAction"));
     penToolAction->setTool(m_penTool.get());
@@ -311,17 +377,45 @@ void mdpQtMainWindow::onToolActionTriggered(QAction* action)
     m_previousActiveToolAction = m_activeToolAction;
     m_activeToolAction = action;
     if (tool != nullptr) {
-        m_imageContainer->setTool(tool);
         tool->activate();
-    }
-    else {
-        m_imageContainer->clearTool();
     }
 }
 
-void mdpQtMainWindow::onResizeScaleSkewToolActivated()
+// private slot
+void mdpQtMainWindow::onSelectionToolPostActivate(mdpSelectionTool* selectionTool)
 {
+    m_imageContainer->setSelectionTool(selectionTool);
+}
+
+// private slot
+void mdpQtMainWindow::onSelectionToolPreDeactivate(mdpSelectionTool* selectionTool)
+{
+    m_imageContainer->clearSelectionTool();
+}
+
+// private slot
+void mdpQtMainWindow::onToolPostActivate(mdpTool* tool)
+{
+    m_imageContainer->setTool(tool);
+}
+
+// private slot
+void mdpQtMainWindow::onToolPreDeactivate(mdpTool* tool)
+{
+    m_imageContainer->clearTool();
+}
+
+// private slot
+void mdpQtMainWindow::onResizeScaleSkewToolPostActivate(mdpResizeScaleSkewTool* resizeScaleSkewTool)
+{
+    m_imageContainer->setTool(resizeScaleSkewTool);
     if (m_previousActiveToolAction != nullptr && m_previousActiveToolAction != m_activeToolAction) {
         m_previousActiveToolAction->trigger();
     }
+}
+
+// private slot
+void mdpQtMainWindow::onResizeScaleSkewToolPreDeactivate(mdpResizeScaleSkewTool* resizeScaleSkewTool)
+{
+    m_imageContainer->clearTool();
 }

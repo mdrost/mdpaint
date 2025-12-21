@@ -40,7 +40,7 @@ public:
     virtual void setPreview(std::shared_ptr<QImage> newPreviewImage, std::shared_ptr<QPainter> newPreviewPainter) = 0;
 
     [[nodiscard]]
-    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
+    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) const = 0;
 };
 
 #endif // MDP_QTMODEL_H

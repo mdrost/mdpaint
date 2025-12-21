@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+        <file>icons/tool-freeformselection.png</file>
+        <file>icons/tool-rectangularselection.png</file>
+        <file>icons/tool-ellipticalselection.png</file>
         <file>icons/tool-pen.png</file>
         <file>icons/tool-line.png</file>
         <file>icons/tool-rectangle.png</file>

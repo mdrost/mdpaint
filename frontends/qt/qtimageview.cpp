@@ -27,16 +27,16 @@ mdpQtImageView::~mdpQtImageView() /* override */
 }
 
 // public
-//QSize mdpImageView::sizeHint() const /* override */
-//{
-//    return m_image.size();
-//}
+QSize mdpQtImageView::sizeHint() const /* override */
+{
+    return m_image.size();
+}
 
 // public
-const mdpTool* mdpQtImageView::tool() const
-{
-    return m_tool;
-}
+//const mdpTool* mdpQtImageView::tool() const
+//{
+//    return m_tool;
+//}
 
 // public
 void mdpQtImageView::setTool(mdpTool* tool)
@@ -127,7 +127,7 @@ void mdpQtImageView::onImageModelDataReset()
     int width = m_imageModel.width();
     int height = m_imageModel.height();
     int bytesPerLine = m_imageModel.stride();
-    m_image = QImage(m_imageModel.data(), width, height, bytesPerLine, QImage::Format_RGBA8888);
+    m_image = QImage(m_imageModel.data(), width, height, bytesPerLine, QImage::Format_ARGB32_Premultiplied);
     setFixedSize(width, height);
     update(); // TODO: Is this necessary? Seems to work without it.
 }

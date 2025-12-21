@@ -1,24 +1,20 @@
 #include "qtimagemodel.h"
 
-#include <mdpaint/private/privateboostsignals2signalconnection.h>
+#include "../qtsignalconnectionprivate.h"
 
 #include <QImage>
 #include <QPainter>
-#include <QDebug>
 
 // public
-mdpQtImageModel::mdpQtImageModel() :
+mdpQtImageModel::mdpQtImageModel(std::unique_ptr<QImage> baseImage, std::unique_ptr<QPainter> basePainter) :
     m_data(nullptr),
     m_dataWidth(0),
     m_dataHeight(0),
     m_dataStride(0),
     m_drawing(false)
 {
-    m_baseImage = std::make_shared<QImage>("example.png");
-    if (m_baseImage->isNull()) {
-        throw std::runtime_error("QImage");
-    }
-    m_basePainter = std::make_shared<QPainter>();
+    m_baseImage = std::move(baseImage);
+    m_basePainter = std::move(basePainter);
     beginDrawing();
     refresh();
     endDrawing();
@@ -67,12 +63,13 @@ void mdpQtImageModel::beginDrawing() /* override */
 void mdpQtImageModel::endDrawing() /* override */
 {
     assert(m_drawing);
-    const bool reallocatedOrReshaped = endDrawingInternal();
+    m_previewPainter->end();
+    const bool reallocatedOrReshaped = true;
     if (reallocatedOrReshaped) {
-        m_dataResetSignal();
+        Q_EMIT dataReset();
     }
     else {
-        m_dataChangedSignal();
+        Q_EMIT dataChanged();
     }
     m_drawing = false;
 }
@@ -131,8 +128,7 @@ void mdpQtImageModel::submit() /* override */
     try {
         beginDrawing();
         refresh();
-        endDrawingInternal();
-        m_drawing = false;
+        endDrawing();
     }
     catch (...) {
         m_previewImage = m_baseImage;
@@ -141,7 +137,7 @@ void mdpQtImageModel::submit() /* override */
         m_basePainter = oldBasePainter;
         throw;
     }
-    m_previewResetSignal();
+    Q_EMIT previewReset();
 }
 
 // public virtual
@@ -151,13 +147,13 @@ void mdpQtImageModel::setPreview(std::shared_ptr<QImage> newPreviewImage, std::s
     m_previewPainter = newPreviewPainter;
     m_previewImage = newPreviewImage;
     newPreviewPainter->begin(newPreviewImage.get());
-    m_previewResetSignal();
+    Q_EMIT previewReset();
 }
 
 // public virtual
-mdpSignalConnection mdpQtImageModel::onPreviewReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpQtImageModel::onPreviewReset(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_previewResetSignal.connect(slot))));
+    return mdpSignalConnection(std::make_unique<mdpQtSignalConnectionPrivate>(connect(this, &mdpQtImageModel::previewReset, slot)));
 }
 
 // public virtual
@@ -185,19 +181,13 @@ int mdpQtImageModel::stride() const /* override */
 }
 
 // public virtual
-mdpSignalConnection mdpQtImageModel::onDataChanged(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpQtImageModel::onDataChanged(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataChangedSignal.connect(slot))));
+    return mdpSignalConnection(std::make_unique<mdpQtSignalConnectionPrivate>(connect(this, &mdpQtImageModel::dataChanged, slot)));
 }
 
 // public virtual
-mdpSignalConnection mdpQtImageModel::onDataReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpQtImageModel::onDataReset(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataResetSignal.connect(slot))));
-}
-
-bool mdpQtImageModel::endDrawingInternal()
-{
-    m_previewPainter->end();
-    return true;
+    return mdpSignalConnection(std::make_unique<mdpQtSignalConnectionPrivate>(connect(this, &mdpQtImageModel::dataReset, slot)));
 }

@@ -37,6 +37,7 @@ void mdpQtEllipseTool::activate() /* override */
 void mdpQtEllipseTool::deactivate() /* override */
 {
     onQtModelPreviewResetConnection.disconnect();
+    m_previewPainter = nullptr;
     m_previewImage = nullptr;
 }
 

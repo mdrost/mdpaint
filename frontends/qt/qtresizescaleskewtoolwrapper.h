@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 class mdpQtResizeScaleSkewToolWrapper final : public QObject, public mdpResizeScaleSkewTool
 {
     Q_OBJECT
@@ -14,6 +16,8 @@ public:
     explicit mdpQtResizeScaleSkewToolWrapper(std::unique_ptr<mdpResizeScaleSkewTool> resizeScaleSkewTool);
 
     ~mdpQtResizeScaleSkewToolWrapper() override;
+
+    // mdpTool interface:
 
     void activate() override;
 
@@ -29,11 +33,15 @@ public:
 
     void leaveEvent() override;
 
+    // mdpResizeScaleSkewTool interface:
+
     void resizeScaleSkew(const mdpResizeScaleSkewData& resizeScaleSkewData) override;
 
 Q_SIGNALS:
 
-    void activated();
+    void postActivate();
+
+    void preDeactivate();
 
 private:
     Q_DISABLE_COPY(mdpQtResizeScaleSkewToolWrapper);

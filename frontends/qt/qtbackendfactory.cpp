@@ -6,7 +6,11 @@
 #include "backend/qtmodel.h"
 #include "backend/qtpentool.h"
 #include "backend/qtrectangletool.h"
+#include "backend/qtrectangularselectiontool.h"
 #include "backend/qtresizescaleskewtool.h"
+
+#include <QImage>
+#include <QPainter>
 
 // public
 mdpQtBackendFactory::mdpQtBackendFactory()
@@ -19,9 +23,32 @@ mdpQtBackendFactory::~mdpQtBackendFactory() /* override */
 }
 
 // public virtual
-std::unique_ptr<mdpImageModel> mdpQtBackendFactory::createImageModel() const /* override */
+std::unique_ptr<mdpImageModel> mdpQtBackendFactory::createImageModel(const int width, const int height) const /* override */
 {
-    return std::make_unique<mdpQtImageModel>();
+    std::unique_ptr<QImage> image = std::make_unique<QImage>(width, height, QImage::Format_ARGB32_Premultiplied);
+    image->fill(Qt::white);
+    std::unique_ptr<QPainter> painter = std::make_unique<QPainter>();
+    std::unique_ptr<mdpImageModel> imageModel = std::make_unique<mdpQtImageModel>(std::move(image), std::move(painter));
+    return imageModel;
+}
+
+// public virtual
+std::unique_ptr<mdpSelectionTool> mdpQtBackendFactory::createFreeFormSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const /* override */
+{
+    return nullptr;
+}
+
+// public virtual
+std::unique_ptr<mdpSelectionTool> mdpQtBackendFactory::createRectangularSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const /* override */
+{
+    mdpQtModel& qtModel = static_cast<mdpQtImageModel&>(imageModel);
+    return std::make_unique<mdpQtRectangularSelectionTool>(qtModel, history);
+}
+
+// public virtual
+std::unique_ptr<mdpSelectionTool> mdpQtBackendFactory::createEllipticalSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const /* override */
+{
+    return nullptr;
 }
 
 // public virtual

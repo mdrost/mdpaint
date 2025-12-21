@@ -19,9 +19,9 @@ public:
 
     ~mdpQtImageView();
 
-    //QSize sizeHint() const override;
+    QSize sizeHint() const override;
 
-    const mdpTool* tool() const;
+    //const mdpTool* tool() const;
 
     void setTool(mdpTool* tool);
 

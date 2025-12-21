@@ -4,6 +4,8 @@
 #include <mdpaint/signalconnection.h>
 #include <mdpaint/tool.h>
 
+#include <QObject>
+
 #include <memory>
 
 class mdpQtModel;
@@ -13,8 +15,10 @@ class mdpHistory;
 class QImage;
 class QPainter;
 
-class mdpQtRectangleTool final : public mdpTool
+class mdpQtRectangleTool final : public QObject, public mdpTool
 {
+    Q_OBJECT
+
 public:
 
     explicit mdpQtRectangleTool(mdpQtModel& qtModel, mdpHistory& history);
@@ -46,6 +50,8 @@ private:
     void onQtModelPreviewReset();
 
 private:
+    Q_DISABLE_COPY(mdpQtRectangleTool)
+
     mdpQtModel& m_qtModel;
     mdpHistory& m_history;
     std::shared_ptr<QImage> m_previewImage;

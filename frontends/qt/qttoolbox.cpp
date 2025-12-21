@@ -6,17 +6,20 @@
 // public
 mdpQtToolBox::mdpQtToolBox(QWidget* parent) :
     QDockWidget(tr("Tool Box"), parent),
+    m_freeFormSelectionToolButton(nullptr),
+    m_rectangularSelectionToolButton(nullptr),
+    m_ellipticalSelectionToolButton(nullptr),
     m_penToolButton(nullptr),
     m_lineToolButton(nullptr),
     m_rectangleToolButton(nullptr),
     m_ellipseToolButton(nullptr),
     m_resizeScaleSkewToolButton(nullptr)
 {
-    m_widget = new QWidget(this);
-    m_widget->setObjectName(QStringLiteral("widget"));
-    setWidget(m_widget);
+    QWidget* widget = new QWidget(this);
+    widget->setObjectName(QStringLiteral("widget"));
+    setWidget(widget);
 
-    m_gridLayout = new QGridLayout(m_widget);
+    m_gridLayout = new QGridLayout(widget);
     m_gridLayout->setObjectName(QStringLiteral("gridLayout"));
     //m_gridLayout->setSpacing(0);
     //m_gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -31,7 +34,34 @@ mdpQtToolBox::~mdpQtToolBox()
 }
 
 // public
-void mdpQtToolBox::setPenToolAction(QAction* penToolAction)
+void mdpQtToolBox::setFreeFormSelectionToolAction(QAction* const freeFormSelectionToolAction)
+{
+    delete m_freeFormSelectionToolButton;
+    m_freeFormSelectionToolButton = new QToolButton(this);
+    m_freeFormSelectionToolButton->setDefaultAction(freeFormSelectionToolAction);
+    m_gridLayout->addWidget(m_freeFormSelectionToolButton, 0, 0);
+}
+
+// public
+void mdpQtToolBox::setRectangularSelectionToolAction(QAction* const rectangularSelectionToolAction)
+{
+    delete m_rectangularSelectionToolButton;
+    m_rectangularSelectionToolButton = new QToolButton(this);
+    m_rectangularSelectionToolButton->setDefaultAction(rectangularSelectionToolAction);
+    m_gridLayout->addWidget(m_rectangularSelectionToolButton, 0, 1);
+}
+
+// public
+void mdpQtToolBox::setEllipticalSelectionToolAction(QAction* const ellipticalSelectionToolAction)
+{
+    delete m_ellipticalSelectionToolButton;
+    m_ellipticalSelectionToolButton = new QToolButton(this);
+    m_ellipticalSelectionToolButton->setDefaultAction(ellipticalSelectionToolAction);
+    m_gridLayout->addWidget(m_ellipticalSelectionToolButton, 1, 0);
+}
+
+// public
+void mdpQtToolBox::setPenToolAction(QAction* const penToolAction)
 {
     delete m_penToolButton;
     m_penToolButton = new QToolButton(this);
@@ -40,7 +70,7 @@ void mdpQtToolBox::setPenToolAction(QAction* penToolAction)
 }
 
 // public
-void mdpQtToolBox::setLineToolAction(QAction* lineToolAction)
+void mdpQtToolBox::setLineToolAction(QAction* const lineToolAction)
 {
     delete m_lineToolButton;
     m_lineToolButton = new QToolButton(this);
@@ -49,7 +79,7 @@ void mdpQtToolBox::setLineToolAction(QAction* lineToolAction)
 }
 
 // public
-void mdpQtToolBox::setRectangleToolAction(QAction* rectangleToolAction)
+void mdpQtToolBox::setRectangleToolAction(QAction* const rectangleToolAction)
 {
     delete m_rectangleToolButton;
     m_rectangleToolButton = new QToolButton(this);
@@ -58,7 +88,7 @@ void mdpQtToolBox::setRectangleToolAction(QAction* rectangleToolAction)
 }
 
 // public
-void mdpQtToolBox::setEllipseToolAction(QAction* ellipseToolAction)
+void mdpQtToolBox::setEllipseToolAction(QAction* const ellipseToolAction)
 {
     delete m_ellipseToolButton;
     m_ellipseToolButton = new QToolButton(this);
@@ -67,7 +97,7 @@ void mdpQtToolBox::setEllipseToolAction(QAction* ellipseToolAction)
 }
 
 // public
-void mdpQtToolBox::setresizeScaleSkewToolAction(QAction* resizeScaleSkewToolAction)
+void mdpQtToolBox::setresizeScaleSkewToolAction(QAction* const resizeScaleSkewToolAction)
 {
     delete m_resizeScaleSkewToolButton;
     m_resizeScaleSkewToolButton = new QToolButton(this);

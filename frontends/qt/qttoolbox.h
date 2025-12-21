@@ -16,6 +16,12 @@ public:
 
     ~mdpQtToolBox() override;
 
+    void setFreeFormSelectionToolAction(QAction* freeFormSelectionToolAction);
+
+    void setRectangularSelectionToolAction(QAction* rectangularSelectionToolAction);
+
+    void setEllipticalSelectionToolAction(QAction* ellipticalSelectionToolAction);
+
     void setPenToolAction(QAction* penToolAction);
 
     void setLineToolAction(QAction* lineToolAction);
@@ -31,8 +37,10 @@ Q_SIGNALS:
 private:
     Q_DISABLE_COPY(mdpQtToolBox)
 
-    QWidget* m_widget;
     QGridLayout* m_gridLayout;
+    QToolButton* m_freeFormSelectionToolButton;
+    QToolButton* m_rectangularSelectionToolButton;
+    QToolButton* m_ellipticalSelectionToolButton;
     QToolButton* m_penToolButton;
     QToolButton* m_lineToolButton;
     QToolButton* m_rectangleToolButton;
