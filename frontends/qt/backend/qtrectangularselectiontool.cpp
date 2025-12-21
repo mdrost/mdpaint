@@ -95,7 +95,7 @@ void mdpQtRectangularSelectionTool::mouseReleaseEvent(const int x, const int y) 
         painter.drawRect(0, 0, selection.width(), selection.height());
         painter.end();
 
-        QRect roi(selection.x(), selection.y(), selection.width(), selection.height());
+        const QRect roi(selection.x(), selection.y(), selection.width(), selection.height());
         painter.begin(&m_cutoutImage);
         painter.drawImage(QPoint(0, 0), *m_previewImage, roi);
         painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
@@ -116,8 +116,8 @@ void mdpQtRectangularSelectionTool::mouseReleaseEvent(const int x, const int y) 
 void mdpQtRectangularSelectionTool::mouseMoveEvent(const int x, const int y) /* override */
 {
     if (m_selecting) {
-        auto [x1, x2] = std::minmax(m_startingX, x);
-        auto [y1, y2] = std::minmax(m_startingY, y);
+        const auto [x1, x2] = std::minmax(m_startingX, x);
+        const auto [y1, y2] = std::minmax(m_startingY, y);
         m_selection = mdpRectangle(mdpPoint(x1, y1), mdpPoint(x2, y2));
         Q_EMIT selectionChanged();
     }

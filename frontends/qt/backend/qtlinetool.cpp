@@ -84,6 +84,9 @@ void mdpQtLineTool::enterEvent() /* override */
 // public virtual
 void mdpQtLineTool::leaveEvent() /* override */
 {
+    if (m_drawing) {
+        return;
+    }
     m_qtModel.beginDrawing();
     m_qtModel.refresh();
     m_qtModel.endDrawing();
