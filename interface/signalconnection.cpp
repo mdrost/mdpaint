@@ -1,6 +1,6 @@
 #include "signalconnection.h"
 
-#include <mdpaint/private/privatesignalconnection.h>
+#include "signalconnectionprivate.h"
 
 // public
 mdpSignalConnection::mdpSignalConnection() noexcept
@@ -8,7 +8,7 @@ mdpSignalConnection::mdpSignalConnection() noexcept
 }
 
 // public
-mdpSignalConnection::mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection> signalConnection) noexcept :
+mdpSignalConnection::mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate> signalConnection) noexcept :
     m_signalConnection(std::move(signalConnection))
 {
 }

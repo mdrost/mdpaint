@@ -5,7 +5,7 @@
 
 #include <memory>
 
-class mdpPrivateSignalConnection;
+class mdpSignalConnectionPrivate;
 
 class MDP_INTERFACE_API [[nodiscard]] mdpSignalConnection final
 {
@@ -13,7 +13,7 @@ public:
 
     explicit mdpSignalConnection() noexcept;
 
-    explicit mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection> signalConnection) noexcept;
+    explicit mdpSignalConnection(std::unique_ptr<mdpSignalConnectionPrivate> signalConnection) noexcept;
 
     mdpSignalConnection(const mdpSignalConnection& other) noexcept = delete;
 
@@ -28,7 +28,7 @@ public:
     void disconnect();
 
 private:
-    std::unique_ptr<mdpPrivateSignalConnection> m_signalConnection;
+    std::unique_ptr<mdpSignalConnectionPrivate> m_signalConnection;
 };
 
 #endif // MDP_INTERFACESIGNALCONNECTION_H

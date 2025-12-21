@@ -1,8 +1,6 @@
 #ifndef MDP_INTERFACEAPI_H
 #define MDP_INTERFACEAPI_H
 
-// XXX: Keep this file in sync with <mdpaint/private/api.h>.
-
 #if defined(_WIN32)
 # define MDP_INTERFACE_API_EXPORT __declspec(dllexport)
 # define MDP_INTERFACE_API_IMPORT __declspec(dllimport)

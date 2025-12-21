@@ -3,9 +3,9 @@
 
 #include "api.h"
 
-#include "signalconnection.h"
-
 #include <functional>
+
+class mdpSignalConnection;
 
 class MDP_INTERFACE_API mdpImageModel
 {
@@ -29,10 +29,10 @@ public:
     virtual int stride() const = 0;
 
     [[nodiscard]]
-    virtual mdpSignalConnection onDataChanged(std::function<void ()> slot) = 0;
+    virtual mdpSignalConnection onDataChanged(std::function<void ()> slot) const = 0;
 
     [[nodiscard]]
-    virtual mdpSignalConnection onDataReset(std::function<void ()> slot) = 0;
+    virtual mdpSignalConnection onDataReset(std::function<void ()> slot) const = 0;
 };
 
 #endif // MDP_INTERFACEIMAGEMODEL_H

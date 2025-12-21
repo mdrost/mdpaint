@@ -24,8 +24,6 @@ if(WIN32)
 endif()
 find_package(Boost REQUIRED COMPONENTS json)
 
-add_subdirectory(private)
-
 add_subdirectory(interface)
 
 set(SOURCES

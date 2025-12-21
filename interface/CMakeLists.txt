@@ -1,24 +1,33 @@
 set(SOURCES
     include/mdpaint/api.h
     include/mdpaint/backendfactory.h
-    backendfactory.cpp
+    include/mdpaint/ellipse.h
     include/mdpaint/frontend.h
-    frontend.cpp
     include/mdpaint/history.h
-    history.cpp
     include/mdpaint/historyentry.h
-    historyentry.cpp
     include/mdpaint/imagemodel.h
-    imagemodel.cpp
-    include/mdpaint/loader.h
-    loader.cpp
+    include/mdpaint/imagereader.h
+    include/mdpaint/imagewriter.h
     include/mdpaint/plugin.h
-    plugin.cpp
+    include/mdpaint/point.h
+    include/mdpaint/rectangle.h
     include/mdpaint/resizescaleskewtool.h
-    resizescaleskewtool.cpp
+    include/mdpaint/selectiontool.h
     include/mdpaint/signalconnection.h
-    signalconnection.cpp
+    include/mdpaint/signalconnectionprivate.h
     include/mdpaint/tool.h
+    backendfactory.cpp
+    frontend.cpp
+    history.cpp
+    historyentry.cpp
+    imagemodel.cpp
+    imagereader.cpp
+    imagewriter.cpp
+    plugin.cpp
+    resizescaleskewtool.cpp
+    selectiontool.cpp
+    signalconnection.cpp
+    signalconnectionprivate.cpp
     tool.cpp
 )
 
@@ -27,7 +36,7 @@ add_library(mdpaint_interface SHARED
 )
 
 target_compile_definitions(mdpaint_interface
-	INTERFACE
+    INTERFACE
     PUBLIC
     PRIVATE
         MDP_INTERFACE_EXPORTS
@@ -35,7 +44,7 @@ target_compile_definitions(mdpaint_interface
 )
 
 target_include_directories(mdpaint_interface
-	INTERFACE
+    INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
     PUBLIC
     PRIVATE
@@ -47,10 +56,9 @@ set_target_properties(mdpaint_interface PROPERTIES
 )
 
 target_link_libraries(mdpaint_interface
-	INTERFACE
+    INTERFACE
     PUBLIC
     PRIVATE
-        mdpaint::private
 )
 
 add_library(mdpaint::interface ALIAS mdpaint_interface)
