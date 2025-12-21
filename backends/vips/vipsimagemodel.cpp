@@ -1,9 +1,9 @@
 #include "vipsimagemodel.h"
 
-#include <mdpaint/private/privateboostsignals2signalconnection.h>
+#include "vipssignalconnectionprivate.h"
 
 // public
-mdpVipsImageModel::mdpVipsImageModel() :
+mdpVipsImageModel::mdpVipsImageModel(VipsImage* baseImage) :
     m_previewImage(nullptr),
     m_data(nullptr),
     m_dataWidth(0),
@@ -11,25 +11,7 @@ mdpVipsImageModel::mdpVipsImageModel() :
     m_dataStride(0),
     m_drawing(false)
 {
-    VipsImage* baseImage = vips_image_new_from_file("example.png", /*"access", VIPS_ACCESS_SEQUENTIAL, */nullptr);
-    if (baseImage == nullptr) {
-        throw std::runtime_error(vips_error_buffer());
-    }
-    VipsImage* tmpImage;
-    if (vips_colourspace(baseImage, &tmpImage, VIPS_INTERPRETATION_sRGB, nullptr)) {
-        g_object_unref(baseImage);
-        throw std::runtime_error(vips_error_buffer());
-    }
-    g_object_unref(baseImage);
-    baseImage = tmpImage;
-    if (vips_image_get_bands(baseImage) == 3) {
-        if (vips_bandjoin_const1(baseImage, &tmpImage, 255, nullptr)) {
-            g_object_unref(baseImage);
-            throw std::runtime_error(vips_error_buffer());
-        }
-        g_object_unref(baseImage);
-        baseImage = tmpImage;
-    }
+    g_object_ref(baseImage);
     m_baseImage = baseImage;
     try {
         beginDrawing();
@@ -150,9 +132,9 @@ void mdpVipsImageModel::setPreview(VipsImage* newPreviewImage) /* override */
 }
 
 // public virtual
-mdpSignalConnection mdpVipsImageModel::onPreviewReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpVipsImageModel::onPreviewReset(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_previewResetSignal.connect(slot))));
+    return mdpSignalConnection(std::make_unique<mdpVipsSignalConnectionPrivate>(m_previewResetSignal.connect(slot)));
 }
 
 // public virtual
@@ -180,15 +162,15 @@ int mdpVipsImageModel::stride() const /* override */
 }
 
 // public virtual
-mdpSignalConnection mdpVipsImageModel::onDataChanged(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpVipsImageModel::onDataChanged(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataChangedSignal.connect(slot))));
+    return mdpSignalConnection(std::make_unique<mdpVipsSignalConnectionPrivate>(m_dataChangedSignal.connect(slot)));
 }
 
 // public virtual
-mdpSignalConnection mdpVipsImageModel::onDataReset(std::function<void ()> slot) /* override */
+mdpSignalConnection mdpVipsImageModel::onDataReset(std::function<void ()> slot) const /* override */
 {
-    return mdpSignalConnection(std::unique_ptr<mdpPrivateSignalConnection>(new mdpPrivateBoostSignals2SignalConnection(m_dataResetSignal.connect(slot))));
+    return mdpSignalConnection(std::make_unique<mdpVipsSignalConnectionPrivate>(m_dataResetSignal.connect(slot)));
 }
 
 bool mdpVipsImageModel::endDrawingInternal()

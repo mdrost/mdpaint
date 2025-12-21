@@ -80,6 +80,9 @@ void mdpVipsLineTool::enterEvent() /* override */
 // public virtual
 void mdpVipsLineTool::leaveEvent() /* override */
 {
+    if (m_drawing) {
+        return;
+    }
     m_vipsModel.beginDrawing();
     m_vipsModel.refresh();
     m_vipsModel.endDrawing();

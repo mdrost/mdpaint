@@ -12,7 +12,16 @@ public:
     ~mdpVipsBackendFactory() override;
 
     [[nodiscard]]
-    std::unique_ptr<mdpImageModel> createImageModel() const override;
+    std::unique_ptr<mdpImageModel> createImageModel(int width, int height) const override;
+
+    [[nodiscard]]
+    std::unique_ptr<mdpSelectionTool> createFreeFormSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const override;
+
+    [[nodiscard]]
+    std::unique_ptr<mdpSelectionTool> createRectangularSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const override;
+
+    [[nodiscard]]
+    std::unique_ptr<mdpSelectionTool> createEllipticalSelectionTool(mdpImageModel& imageModel, mdpHistory& history) const override;
 
     [[nodiscard]]
     std::unique_ptr<mdpTool> createPenTool(mdpImageModel& imageModel, mdpHistory& history) const override;

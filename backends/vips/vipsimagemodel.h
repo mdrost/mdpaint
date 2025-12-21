@@ -14,7 +14,7 @@ class mdpVipsImageModel final : public mdpVipsModel, public mdpImageModel
 {
 public:
 
-    explicit mdpVipsImageModel();
+    explicit mdpVipsImageModel(VipsImage* baseImage);
 
     ~mdpVipsImageModel() override;
 
@@ -36,7 +36,7 @@ public:
 
     void setPreview(VipsImage* newPreviewImage) override;
 
-    mdpSignalConnection onPreviewReset(std::function<void ()> slot) override;
+    mdpSignalConnection onPreviewReset(std::function<void ()> slot) const override;
 
     // mdpImageModel interface:
 
@@ -53,10 +53,10 @@ public:
     int stride() const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataChanged(std::function<void ()> slot) override;
+    mdpSignalConnection onDataChanged(std::function<void ()> slot) const override;
 
     [[nodiscard]]
-    mdpSignalConnection onDataReset(std::function<void ()> slot) override;
+    mdpSignalConnection onDataReset(std::function<void ()> slot) const override;
 
 private:
 
@@ -65,14 +65,14 @@ private:
 private:
     VipsImage* m_baseImage;
     VipsImage* m_previewImage;
-    boost::signals2::signal<void ()> m_previewResetSignal;
+    mutable boost::signals2::signal<void ()> m_previewResetSignal;
     unsigned char* m_data;
     int m_dataWidth;
     int m_dataHeight;
     int m_dataStride;
     bool m_drawing;
-    boost::signals2::signal<void ()> m_dataChangedSignal;
-    boost::signals2::signal<void ()> m_dataResetSignal;
+    mutable boost::signals2::signal<void ()> m_dataChangedSignal;
+    mutable boost::signals2::signal<void ()> m_dataResetSignal;
 };
 
 #endif // MDP_VIPSIMAGEMODEL_H

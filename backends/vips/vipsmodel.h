@@ -32,7 +32,7 @@ public:
     virtual void setPreview(VipsImage* newPreviewImage) = 0;
 
     [[nodiscard]]
-    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) = 0;
+    virtual mdpSignalConnection onPreviewReset(std::function<void ()> slot) const = 0;
 };
 
 #endif // MDP_VIPSMODEL_H

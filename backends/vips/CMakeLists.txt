@@ -28,6 +28,8 @@ set(SOURCES
     vipsrectangletool.cpp
     vipsresizescaleskewtool.h
     vipsresizescaleskewtool.cpp
+    vipssignalconnectionprivate.h
+    vipssignalconnectionprivate.cpp
     vipssvgtemplates.h
     vips.json.in
 )
@@ -56,7 +58,6 @@ target_link_libraries(mdpaint_vips
         mdpaint::interface
     PRIVATE
         Vips::Vips
-        mdpaint::private
         Boost::headers
         GLIB2::GOBJECT
 )

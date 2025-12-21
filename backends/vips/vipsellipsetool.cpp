@@ -82,6 +82,9 @@ void mdpVipsEllipseTool::enterEvent() /* override */
 // public virtual
 void mdpVipsEllipseTool::leaveEvent() /* override */
 {
+    if (m_drawing) {
+        return;
+    }
     m_vipsModel.beginDrawing();
     m_vipsModel.refresh();
     m_vipsModel.endDrawing();
